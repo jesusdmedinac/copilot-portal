@@ -11,11 +11,8 @@ export default function PinGate({ pin }: PinGateProps) {
   const [enteredPin, setEnteredPin] = useState('');
   const [error, setError] = useState(false);
 
-  // Leer PIN desde prop o variable de entorno (.env) con fallback a '2026'
-  const envPin = typeof import.meta !== 'undefined' 
-    ? (import.meta.env?.PUBLIC_PORTAL_PIN || import.meta.env?.PORTAL_PIN)
-    : undefined;
-  const targetPin = (pin || envPin || '2026').toString().trim();
+  // PIN inyectado desde Layout.astro vía .env (PORTAL_PIN)
+  const targetPin = (pin || '2026').toString().trim();
   const targetLength = targetPin.length || 4;
 
   useEffect(() => {
