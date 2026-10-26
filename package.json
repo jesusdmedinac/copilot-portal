@@ -10,8 +10,7 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/react": "^6.0.6",
-    "@tailwindcss/vite": "^4.1.0",
+    "@astrojs/react": "5.0.7",
     "astro": "^6.4.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -22,5 +21,13 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "postcss": "^8.5.31"
+  },
+  "overrides": {
+    "vite": "^7.3.7"
+  },
+  "pnpm": {
+    "overrides": {
+      "vite": "^7.3.7"
+    }
   }
 }
