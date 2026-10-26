@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
 
-const CORRECT_PIN = '2026';
 export const STORAGE_KEY = 'ops_portal_pin_unlocked';
 
-export default function PinGate() {
+interface PinGateProps {
+  pin?: string;
+}
+
+export default function PinGate({ pin }: PinGateProps) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [enteredPin, setEnteredPin] = useState('');
   const [error, setError] = useState(false);
+
+  // Leer PIN desde prop o variable de entorno (.env) con fallback a '2026'
+  const envPin = typeof import.meta !== 'undefined' 
+    ? (import.meta.env?.PUBLIC_PORTAL_PIN || import.meta.env?.PORTAL_PIN)
+    : undefined;
+  const targetPin = (pin || envPin || '2026').toString().trim();
+  const targetLength = targetPin.length || 4;
 
   useEffect(() => {
     const checkAuth = () => {
@@ -25,13 +35,13 @@ export default function PinGate() {
   }, []);
 
   const handleDigit = (digit: string) => {
-    if (enteredPin.length < 4) {
+    if (enteredPin.length < targetLength) {
       const next = enteredPin + digit;
       setEnteredPin(next);
       setError(false);
 
-      if (next.length === 4) {
-        if (next === CORRECT_PIN) {
+      if (next.length === targetLength) {
+        if (next === targetPin) {
           localStorage.setItem(STORAGE_KEY, 'true');
           setIsAuthenticated(true);
           window.dispatchEvent(new Event('auth-changed'));
@@ -67,12 +77,12 @@ export default function PinGate() {
           Portal Privado de Operaciones
         </h2>
         <p className="text-xs text-zinc-400 mt-1 mb-6 leading-relaxed">
-          Ingresa el PIN de seguridad de 4 dígitos para acceder a la base técnica y Copilot de Karla.
+          Ingresa el PIN de seguridad de {targetLength} dígitos configurado para acceder al portal de Karla.
         </p>
 
-        {/* Indicadores de PIN */}
+        {/* Indicadores de PIN dinámicos según targetLength */}
         <div className="flex items-center justify-center gap-3 mb-6">
-          {[0, 1, 2, 3].map((idx) => {
+          {Array.from({ length: targetLength }).map((_, idx) => {
             const filled = enteredPin.length > idx;
             return (
               <div

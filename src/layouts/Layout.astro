@@ -13,6 +13,8 @@ const {
   title = "Copilot Ops | Portal Karla", 
   description = "Base de conocimiento y asistente operativo para postulaciones laborales" 
 } = Astro.props;
+
+const portalPin = import.meta.env.PORTAL_PIN || import.meta.env.PUBLIC_PORTAL_PIN || "2026";
 ---
 
 <!doctype html>
@@ -86,7 +88,7 @@ const {
     <!-- Asistente Copilot Flotante para Karla (Isla React) -->
     <CopilotChat client:load />
 
-    <!-- Barrera de Protección por PIN (Isla React) -->
-    <PinGate client:load />
+    <!-- Barrera de Protección por PIN (Isla React con configuración desde .env) -->
+    <PinGate pin={portalPin} client:load />
   </body>
 </html>
