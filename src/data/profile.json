@@ -1,0 +1,228 @@
+{
+  "basics": {
+    "name": "Jesús Daniel Medina Cruz",
+    "label": "Kotlin Multiplatform (KMP) Expert | Senior Mobile Software Engineer",
+    "image": "/me_avatar.jpg",
+    "email": "jesus.daniel.medina.cruz@gmail.com",
+    "phone": "+14704061747",
+    "url": "https://jesusdmedinac.com",
+    "summary": "Senior Mobile Engineer with 10 years of experience architecting highly scalable cross-platform systems. Specialized in Kotlin Multiplatform (KMP) to maximize code sharing across Android, iOS, desktop, web, and server environments without sacrificing native performance. Proven track record of leading migrations, modernizing legacy systems, and establishing robust CI/CD pipelines to accelerate delivery cycles in fast-paced startup and enterprise environments.",
+    "theme": "default",
+    "location": {
+      "address": "",
+      "postalCode": "94577",
+      "city": "San Leandro",
+      "countryCode": "US",
+      "region": "CA (San Francisco Bay Area)"
+    },
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "username": "jesusdmedinac",
+        "url": "https://linkedin.com/in/jesusdmedinac"
+      },
+      {
+        "network": "Website",
+        "username": "jesusdmedinac.com",
+        "url": "https://jesusdmedinac.com"
+      },
+      {
+        "network": "GitHub",
+        "username": "jesusdmedinac",
+        "url": "https://github.com/jesusdmedinac"
+      }
+    ]
+  },
+  "work": [
+    {
+      "name": "Wells Fargo",
+      "position": "Senior UI Engineer (Client Platform)",
+      "location_type": "Hybrid",
+      "location": "San Leandro, CA",
+      "startDate": "2025-01",
+      "endDate": null,
+      "summary": "Led the modernization and architectural redesign of critical navigation flows for one of the largest banking applications in the US, serving tens of millions of customers.",
+      "url": "https://wellsfargo.com",
+      "highlights": [
+        "Architected a centralized, 100% testable navigation system consolidating 10+ fragmented entry points, significantly reducing technical debt and eliminating duplicate logic.",
+        "Led the strategic UI modernization initiative, spearheading the migration of legacy XML layouts to Jetpack Compose while enforcing Clean Architecture and MVVM patterns.",
+        "Increased test coverage and stability across the app by moving navigation logic out of Fragments into isolated, testable domain layers.",
+        "Mentored the engineering team on modern Android practices (Compose, Kotlin/Native, MVVM) and integrated AI tools (GitHub Copilot, Devin) to accelerate development velocity."
+      ],
+      "responsibilities": [
+        "Architected a centralized, 100% testable navigation system consolidating 10+ fragmented entry points, significantly reducing technical debt and eliminating duplicate logic.",
+        "Led the strategic UI modernization initiative, spearheading the migration of legacy XML layouts to Jetpack Compose while enforcing Clean Architecture and MVVM patterns.",
+        "Increased test coverage and stability across the app by moving navigation logic out of Fragments into isolated, testable domain layers.",
+        "Mentored the engineering team on modern Android practices (Compose, Kotlin/Native, MVVM) and integrated AI tools (GitHub Copilot, Devin) to accelerate development velocity."
+      ],
+      "skills": [
+        "Jetpack Compose",
+        "Kotlin/Native",
+        "Clean Architecture",
+        "MVVM",
+        "Testing",
+        "AI Tools"
+      ]
+    },
+    {
+      "name": "Academia Desde0",
+      "position": "Senior Mobile Developer & Instructor",
+      "location_type": "Remote",
+      "location": "Remote",
+      "startDate": "2024-02",
+      "endDate": "2024-12",
+      "url": "https://desde0.jesusdmedinac.com",
+      "summary": "Directed curriculum development at a training platform founded to democratize access to high-quality tech education for Spanish-speaking communities.",
+      "highlights": [
+        "Upskilled developers in modern mobile architecture by designing and delivering a curriculum focused on KMP and modern architectural patterns.",
+        "Decreased bug density in student projects through the implementation of project-based learning and Test-Driven Development (TDD).",
+        "Improved code quality and team collaboration by establishing pair programming, structured code reviews, and agile feedback cycles."
+      ],
+      "skills": [
+        "Mobile Development",
+        "Kotlin Multiplatform",
+        "TDD",
+        "Mentoring"
+      ]
+    },
+    {
+      "name": "Bubble",
+      "position": "Mobile Software Consultant (KMP Focus)",
+      "location_type": "Remote",
+      "location": "Remote",
+      "startDate": "2021-03",
+      "endDate": "2024-02",
+      "summary": "Provided hands-on engineering and strategic guidance across multiple companies (Bitso, Dexcom), focusing on scalable and maintainable codebases for Android and iOS.",
+      "url": "https://bubble.jesusdmedinac.com",
+      "highlights": [
+        "Increased development velocity by leading a codebase modernization initiative, migrating legacy implementations to modular, shared Kotlin packages.",
+        "Bitso (Fintech): Owned cross-platform integration of user engagement SDKs using Kotlin Multiplatform across Android and iOS.",
+        "Dexcom (Medical): Championed robust testing practices and SDK development for high-trust health apps, maintaining 99.94% crash-free sessions.",
+        "Increased user engagement by integrating AI-driven personalization and dynamic user experiences via Firebase Remote Config."
+      ],
+      "skills": [
+        "Android",
+        "iOS",
+        "Kotlin Multiplatform",
+        "Firebase",
+        "CI/CD",
+        "Kotlin"
+      ]
+    },
+    {
+      "name": "Insulet Corporation",
+      "position": "Senior Mobile Engineer",
+      "location_type": "On site",
+      "location": "Tijuana, Baja California, Mexico",
+      "startDate": "2019-11",
+      "endDate": "2021-03",
+      "summary": "Spearheaded the development of the VIEW app, an innovative mobile solution empowering caregivers to remotely monitor the health of individuals living with diabetes.",
+      "url": "",
+      "highlights": [
+        "Delivered real-time health monitoring for individuals with diabetes by architecting the VIEW app with high-concurrency data processing and low-latency communication.",
+        "Reduced memory footprint and improved app responsiveness by implementing memory-optimized domain layers and modular architecture.",
+        "Streamlined the development of shared platform services, increasing code reuse between Android and iOS using Kotlin and Java."
+      ],
+      "skills": [
+        "Android",
+        "iOS",
+        "Kotlin Multiplatform",
+        "Kotlin",
+        "Java"
+      ]
+    },
+    {
+      "name": "arkusnexus",
+      "position": "Senior Mobile Developer",
+      "location_type": "On site",
+      "location": "Tijuana, Baja California, Mexico",
+      "startDate": "2019-04",
+      "endDate": "2019-11",
+      "summary": "Contributed to Rosy (Memory Assistant) and Simplicity (Insurtech) cross-platform applications.",
+      "url": "",
+      "highlights": [
+        "Executed a 100% successful migration strategy from React Native to native platforms for the Rosy memory assistant, ensuring zero feature regression.",
+        "Increased user acquisition by developing a cross-platform insurtech application with real-time vehicle telematics for dynamic insurance pricing."
+      ],
+      "skills": [
+        "Java",
+        "Android",
+        "React Native",
+        "Cross-platform"
+      ]
+    },
+    {
+      "name": "Compus Sistemas Express",
+      "position": "Software Developer",
+      "location_type": "On site",
+      "location": "Tijuana, Baja California, Mexico",
+      "startDate": "2014-07",
+      "endDate": "2017-07",
+      "summary": "Spearheaded the digital transformation of enterprise operations by architecting a suite of applications, replacing outdated manual processes and significantly boosting efficiency.",
+      "url": "",
+      "highlights": [
+        "Boosted development velocity for internal projects by creating reusable SDKs and service clients to standardize data access."
+      ],
+      "skills": [
+        "Android",
+        "Java",
+        "PHP",
+        "MySQL",
+        "XML"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "IUT de La Rochelle",
+      "url": "https://www.iut-larochelle.fr/",
+      "area": "Licence Professionnelle, Informatique Répartie et Mobile",
+      "studyType": "Bachelor",
+      "startDate": "2017-06-01",
+      "endDate": "2018-06-01"
+    },
+    {
+      "institution": "Universidad Tecnológica de Tijuana",
+      "url": "https://uttijuana.edu.mx/",
+      "area": "Técnico Superior Universitario, Tecnologías de la Información y Comunicación",
+      "studyType": "Associate",
+      "startDate": "2015-06",
+      "endDate": "2017-06"
+    }
+  ],
+  "projects": [
+    {
+      "name": "json-to-compose",
+      "badge": "Server-Driven UI Engine",
+      "description": "High-performance Server-Driven UI rendering engine enabling dynamic updates and declarative UI sync across Android, iOS, Desktop, and Web using Compose Multiplatform.",
+      "url": "https://github.com/jesusdmedinac/json-to-compose"
+    },
+    {
+      "name": "Zora Community",
+      "badge": "Open-Core Reference App",
+      "description": "Production reference application for automotive parts search built with pure Kotlin Toolchain, SQLDelight 2.x, MVI, Turbine, and Jetpack Compose Multiplatform.",
+      "url": "https://github.com/jesusdmedinac/zora-community"
+    },
+    {
+      "name": "KMP CLI",
+      "badge": "Developer Toolchain",
+      "description": "Zero-bloat CLI and architecture doctor suite for Kotlin Multiplatform project diagnostics, dependency audits, and automated migrations.",
+      "url": "https://github.com/jesusdmedinac/kmp-cli"
+    },
+    {
+      "name": "Academia Desde0",
+      "badge": "Tech Education",
+      "description": "Educational platform democratizing mobile engineering and Kotlin Multiplatform for over 2,000 Spanish-speaking developers.",
+      "url": "https://desde0.jesusdmedinac.com"
+    }
+  ],
+  "keyBadges": [
+    "Staff / Senior Mobile",
+    "Kotlin Multiplatform (KMP)",
+    "Jetpack Compose / SwiftUI",
+    "Server-Driven UI (SDUI)",
+    "10 Años de Experiencia",
+    "San Leandro, CA (Bay Area)",
+    "US Work Authorized"
+  ]
+}
