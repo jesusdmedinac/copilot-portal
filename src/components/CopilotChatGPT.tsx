@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { analyzeAndGeneratePackage } from '../data/applicationPackageGenerator';
 import type { ApplicationPackage } from '../data/applicationPackageGenerator';
+import { callGeminiApi, parseGeminiResponseToPackage, GEMINI_STORAGE_KEY } from '../data/geminiClient';
 import { STORAGE_KEY } from './PinGate';
 
 interface ThreadSession {
@@ -23,17 +24,26 @@ export default function CopilotChatGPT() {
   const [currentSessionId, setCurrentSessionId] = useState<string>('new');
   const [input, setInput] = useState('');
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [apiKey, setApiKey] = useState<string>('');
+  const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
+  const [tempApiKey, setTempApiKey] = useState<string>('');
+  const [isThinking, setIsThinking] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Cargar sesiones guardadas en localStorage
+  // Cargar sesiones y API Key desde localStorage
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_SESSIONS_KEY);
-      if (saved) {
-        setSessions(JSON.parse(saved));
+      const savedSessions = localStorage.getItem(STORAGE_SESSIONS_KEY);
+      if (savedSessions) {
+        setSessions(JSON.parse(savedSessions));
+      }
+      const savedKey = localStorage.getItem(GEMINI_STORAGE_KEY);
+      if (savedKey) {
+        setApiKey(savedKey);
+        setTempApiKey(savedKey);
       }
     } catch (e) {
-      console.error('Error al cargar sesiones:', e);
+      console.error('Error al inicializar datos:', e);
     }
   }, []);
 
@@ -47,12 +57,19 @@ export default function CopilotChatGPT() {
     }
   };
 
+  const handleSaveApiKey = () => {
+    const trimmed = tempApiKey.trim();
+    setApiKey(trimmed);
+    localStorage.setItem(GEMINI_STORAGE_KEY, trimmed);
+    setShowSettingsModal(false);
+  };
+
   const currentSession = sessions.find(s => s.id === currentSessionId);
   const activeMessages = currentSession ? currentSession.messages : [];
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [activeMessages]);
+  }, [activeMessages, isThinking]);
 
   const handleCopy = async (text: string, key: string) => {
     try {
@@ -90,12 +107,39 @@ export default function CopilotChatGPT() {
     }
   };
 
-  const handleSend = (textToSend?: string) => {
+  const handleSend = async (textToSend?: string) => {
     const query = (textToSend || input).trim();
     if (!query) return;
 
     const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const pkg = analyzeAndGeneratePackage(query);
+    setInput('');
+    setIsThinking(true);
+
+    let pkg: ApplicationPackage;
+
+    try {
+      if (apiKey) {
+        // Conexión real con Gemini 2.0 Flash
+        const rawOutput = await callGeminiApi(query, apiKey);
+        pkg = parseGeminiResponseToPackage(rawOutput, query);
+      } else {
+        // Motor determinista local
+        pkg = analyzeAndGeneratePackage(query);
+      }
+    } catch (err: any) {
+      console.error('Error llamando a Gemini API:', err);
+      pkg = {
+        type: 'general',
+        summaryNote: `⚠️ Error al conectar con el LLM: ${err.message || err}. Usando motor local de respaldo:`,
+        atsAnswers: [{
+          question: query,
+          answer: 'Por favor verifica la API Key de Gemini en Ajustes.',
+          tag: 'Error API'
+        }]
+      };
+    } finally {
+      setIsThinking(false);
+    }
 
     // Determinar título de la sesión
     let title = pkg.companyName ? `${pkg.companyName} (${pkg.roleTitle || 'Postulación'})` : query.slice(0, 28) + '...';
@@ -129,8 +173,6 @@ export default function CopilotChatGPT() {
       });
       saveSessions(updated);
     }
-
-    setInput('');
   };
 
   const handleLock = () => {
@@ -207,6 +249,21 @@ export default function CopilotChatGPT() {
               </div>
               <span className="text-[10px] text-zinc-500">↗</span>
             </a>
+            <button
+              onClick={() => setShowSettingsModal(true)}
+              type="button"
+              className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50 transition-colors text-left cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <span>⚙️</span>
+                <span>Modelo LLM</span>
+              </div>
+              <span className={`text-[9px] px-1.5 py-0.2 rounded border font-mono ${
+                apiKey ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-zinc-800 text-zinc-400 border-zinc-700'
+              }`}>
+                {apiKey ? 'Gemini 2.0' : 'Local'}
+              </span>
+            </button>
           </nav>
         </div>
 
@@ -262,7 +319,7 @@ export default function CopilotChatGPT() {
           <button
             onClick={handleLock}
             type="button"
-            className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 transition-colors text-xs font-mono"
+            className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 transition-colors text-xs font-mono cursor-pointer"
             title="Bloquear portal"
           >
             🔒
@@ -297,9 +354,11 @@ export default function CopilotChatGPT() {
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              Base Oficial Activa
+            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono border ${
+              apiKey ? 'bg-indigo-500/10 text-indigo-300 border-indigo-500/20' : 'bg-zinc-800 text-zinc-400 border-zinc-700'
+            }`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${apiKey ? 'bg-indigo-400 animate-pulse' : 'bg-zinc-500'}`}></span>
+              {apiKey ? 'LLM Conectado (Gemini 2.0)' : 'Motor Local'}
             </span>
           </div>
         </header>
@@ -346,13 +405,17 @@ export default function CopilotChatGPT() {
 
                   <button
                     type="submit"
-                    disabled={!input.trim()}
+                    disabled={!input.trim() || isThinking}
                     className="w-9 h-9 rounded-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-30 disabled:hover:bg-indigo-600 text-white flex items-center justify-center transition-all cursor-pointer shrink-0"
                     title="Enviar"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                    </svg>
+                    {isThinking ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    ) : (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                      </svg>
+                    )}
                   </button>
                 </div>
               </form>
@@ -580,6 +643,20 @@ export default function CopilotChatGPT() {
                   )}
                 </div>
               ))}
+
+              {/* Indicador de pensamiento de IA */}
+              {isThinking && (
+                <div className="flex gap-3 max-w-4xl mx-auto items-center">
+                  <div className="w-8 h-8 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-bold text-xs font-mono animate-pulse">
+                    AI
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-3 rounded-2xl bg-zinc-900/60 border border-zinc-800 text-xs font-mono text-zinc-400">
+                    <span className="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
+                    <span>Analizando con Gemini 2.0 Flash y redactando paquete...</span>
+                  </div>
+                </div>
+              )}
+
               <div ref={messagesEndRef} />
             </div>
 
@@ -601,7 +678,7 @@ export default function CopilotChatGPT() {
                 />
                 <button
                   type="submit"
-                  disabled={!input.trim()}
+                  disabled={!input.trim() || isThinking}
                   className="w-8 h-8 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-30 disabled:hover:bg-indigo-600 text-white flex items-center justify-center transition-colors cursor-pointer shrink-0"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -615,6 +692,70 @@ export default function CopilotChatGPT() {
         )}
 
       </main>
+
+      {/* ========================================================= */}
+      {/* MODAL DE CONFIGURACIÓN DE API KEY (GEMINI) */}
+      {/* ========================================================= */}
+      {showSettingsModal && (
+        <div className="fixed inset-0 z-50 bg-zinc-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-md p-6 rounded-2xl border border-zinc-800 bg-zinc-900 shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            
+            <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">⚙️</span>
+                <h3 className="font-bold text-sm text-zinc-100">Configuración de Inteligencia Artificial</h3>
+              </div>
+              <button
+                onClick={() => setShowSettingsModal(false)}
+                type="button"
+                className="text-zinc-500 hover:text-zinc-300 text-sm p-1"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Conecta **Google Gemini 2.0 Flash** para activar el análisis contextual profundo de vacantes y la redacción de CVs personalizados en LaTeX desde la tablet de Karla.
+              </p>
+
+              <div>
+                <label className="block text-xs font-mono text-zinc-300 mb-1.5">
+                  Gemini API Key (Google AI Studio)
+                </label>
+                <input
+                  type="password"
+                  value={tempApiKey}
+                  onChange={(e) => setTempApiKey(e.target.value)}
+                  placeholder="AIzaSy..."
+                  className="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3.5 py-2.5 text-xs text-zinc-100 font-mono placeholder-zinc-600 focus:outline-none focus:border-indigo-500"
+                />
+                <p className="text-[11px] text-zinc-500 mt-1.5">
+                  La clave se guarda localmente en esta tablet (<code className="text-zinc-400 font-mono">localStorage</code>). Es 100% gratuita y tiene capa ilimitada de prueba en aistudio.google.com.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-zinc-800/80">
+              <button
+                onClick={() => setShowSettingsModal(false)}
+                type="button"
+                className="px-4 py-2 rounded-xl text-xs font-mono text-zinc-400 hover:text-zinc-200 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleSaveApiKey}
+                type="button"
+                className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs font-mono transition-colors shadow-md shadow-indigo-600/30"
+              >
+                Guardar y Conectar
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
 
     </div>
   );
