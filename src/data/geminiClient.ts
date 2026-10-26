@@ -1,5 +1,3 @@
-import profile from './profile.json';
-import guides from './guides.json';
 import type { ApplicationPackage } from './applicationPackageGenerator';
 
 export const GEMINI_STORAGE_KEY = 'copilot_gemini_api_key';
@@ -55,7 +53,7 @@ Usa markdown limpio y claro.`;
 
 export async function callGeminiApi(prompt: string, apiKey: string): Promise<string> {
   const systemPrompt = buildSystemPrompt();
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
   const payload = {
     contents: [
@@ -113,6 +111,13 @@ export function parseGeminiResponseToPackage(llmText: string, originalQuery: str
     latexCv = latexMatch[1].trim();
   }
 
+  // Extraer Cover Letter si viene etiquetada
+  let coverLetter: string | undefined;
+  const coverMatch = llmText.match(/(?:##\s*(?:Cover Letter|Carta de Presentación)|Cover Letter:)\s*\n+([\s\S]*?)(?=\n##|\n\[|$)/i);
+  if (coverMatch) {
+    coverLetter = coverMatch[1].trim();
+  }
+
   // Extraer email draft si existe
   let emailSubject: string | undefined;
   let emailDraft: string | undefined;
@@ -125,10 +130,23 @@ export function parseGeminiResponseToPackage(llmText: string, originalQuery: str
   const isLinkedIn = originalQuery.toLowerCase().includes('linkedin') || /@/.test(originalQuery);
   const isAts = originalQuery.length > 150 || /requirements|responsibilities/i.test(originalQuery);
 
+  // Limpiar summaryNote para que no duplique el bloque LaTeX si ya fue extraído
+  let cleanSummary = llmText
+    .replace(/\[NUEVA_PREGUNTA_NOTION\][\s\S]*?\[\/NUEVA_PREGUNTA_NOTION\]/g, '')
+    .trim();
+
+  if (latexCv) {
+    cleanSummary = cleanSummary
+      .replace(/```(?:latex|tex)?\s*[\s\S]*?\\documentclass[\s\S]*?\\end\{document\}[\s\S]*?```/g, '')
+      .replace(/(\\documentclass[\s\S]*?\\end\{document\})/g, '')
+      .trim();
+  }
+
   return {
     type: isLinkedIn ? 'linkedin-email' : isAts ? 'ats-package' : 'qa-answer',
-    summaryNote: llmText.replace(/\[NUEVA_PREGUNTA_NOTION\][\s\S]*?\[\/NUEVA_PREGUNTA_NOTION\]/, '').trim(),
+    summaryNote: cleanSummary,
     latexCv,
+    coverLetter,
     emailSubject,
     emailDraft: isLinkedIn ? llmText : undefined,
     notionSyncSnippet: notionSnippet

@@ -20,6 +20,9 @@ importers:
       astro:
         specifier: ^6.4.8
         version: 6.4.8(jiti@2.7.0)(lightningcss@1.33.0)(rollup@4.65.1)
+      marked:
+        specifier: ^18.1.2
+        version: 18.1.2
       react:
         specifier: ^19.0.0
         version: 19.3.1
@@ -1301,6 +1304,11 @@ packages:
 
   markdown-table@3.0.4:
     resolution: {integrity: sha512-wiYz4+JrLyb/DqW2hkFJxP7Vd7JuTDm77fvbM8VfEQdmSMqcImWeeRbHwZjBjIFki/VaMK2BhFi7oUUZeM5bqw==}
+
+  marked@18.1.2:
+    resolution: {integrity: sha512-DfOnvLAQ6WYeWxWO1u4RyFOeqyHup6dks5PPqnoFiooU7ipRvidO/2j8plhAHIiZg574E9ZlzSjUiPMLAzFkgg==}
+    engines: {node: '>= 20'}
+    hasBin: true
 
   mdast-util-definitions@6.0.0:
     resolution: {integrity: sha512-scTllyX6pnYNZH/AIp/0ePz6s4cZtARxImwoPJ7kS42n+MnVsI4XbnG6d4ibehRIldYMWM2LD7ImQblVhUejVQ==}
@@ -3109,6 +3117,8 @@ snapshots:
       source-map-js: 1.2.2
 
   markdown-table@3.0.4: {}
+
+  marked@18.1.2: {}
 
   mdast-util-definitions@6.0.0:
     dependencies:

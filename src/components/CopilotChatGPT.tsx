@@ -1,8 +1,25 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { marked } from 'marked';
 import { analyzeAndGeneratePackage } from '../data/applicationPackageGenerator';
 import type { ApplicationPackage } from '../data/applicationPackageGenerator';
 import { callGeminiApi, parseGeminiResponseToPackage, GEMINI_STORAGE_KEY } from '../data/geminiClient';
 import { STORAGE_KEY } from './PinGate';
+
+// Configurar marked para Markdown con soporte GFM y saltos de línea suaves
+marked.setOptions({
+  gfm: true,
+  breaks: true,
+});
+
+function renderMarkdown(content: string): string {
+  if (!content) return '';
+  try {
+    return marked.parse(content) as string;
+  } catch (err) {
+    console.error('Error rendering markdown:', err);
+    return content;
+  }
+}
 
 interface ThreadSession {
   id: string;
@@ -18,19 +35,23 @@ interface ThreadSession {
 
 const STORAGE_SESSIONS_KEY = 'karla_chat_sessions_v1';
 
-export default function CopilotChatGPT() {
+interface CopilotChatGPTProps {
+  initialApiKey?: string;
+}
+
+export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [sessions, setSessions] = useState<ThreadSession[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState<string>('new');
   const [input, setInput] = useState('');
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
-  const [apiKey, setApiKey] = useState<string>('');
+  const [apiKey, setApiKey] = useState<string>(initialApiKey);
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
-  const [tempApiKey, setTempApiKey] = useState<string>('');
+  const [tempApiKey, setTempApiKey] = useState<string>(initialApiKey);
   const [isThinking, setIsThinking] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Cargar sesiones y API Key desde localStorage
+  // Cargar sesiones y API Key desde localStorage o .env
   useEffect(() => {
     try {
       const savedSessions = localStorage.getItem(STORAGE_SESSIONS_KEY);
@@ -41,11 +62,14 @@ export default function CopilotChatGPT() {
       if (savedKey) {
         setApiKey(savedKey);
         setTempApiKey(savedKey);
+      } else if (initialApiKey) {
+        setApiKey(initialApiKey);
+        setTempApiKey(initialApiKey);
       }
     } catch (e) {
       console.error('Error al inicializar datos:', e);
     }
-  }, []);
+  }, [initialApiKey]);
 
   // Guardar sesiones en localStorage
   const saveSessions = (updated: ThreadSession[]) => {
@@ -481,7 +505,14 @@ export default function CopilotChatGPT() {
                       : 'bg-zinc-900/70 text-zinc-200 border border-zinc-800/80 flex-1 space-y-4'
                   }`}>
                     
-                    <p className="whitespace-pre-wrap">{msg.text}</p>
+                    {msg.sender === 'assistant' ? (
+                      <div 
+                        className="copilot-markdown text-xs sm:text-sm text-zinc-200 leading-relaxed"
+                        dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.text) }}
+                      />
+                    ) : (
+                      <p className="whitespace-pre-wrap">{msg.text}</p>
+                    )}
 
                     {/* RENDERIZADO DEL PAQUETE SI APLICA */}
                     {msg.pkg && (
@@ -570,9 +601,10 @@ export default function CopilotChatGPT() {
                                 {copiedKey === `cover-${idx}` ? '✓ Copiado' : '📋 Copiar Carta'}
                               </button>
                             </div>
-                            <pre className="text-xs text-zinc-200 whitespace-pre-wrap font-sans leading-relaxed bg-zinc-900/50 p-3 rounded-lg border border-zinc-800/60 select-all">
-{msg.pkg.coverLetter}
-                            </pre>
+                            <div 
+                              className="copilot-markdown text-xs text-zinc-200 leading-relaxed bg-zinc-900/50 p-3 rounded-lg border border-zinc-800/60"
+                              dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.pkg.coverLetter) }}
+                            />
                           </div>
                         )}
 
@@ -594,9 +626,10 @@ export default function CopilotChatGPT() {
                                     {copiedKey === `ans-${idx}-${aIdx}` ? '✓ Copiado' : '📋 Copiar'}
                                   </button>
                                 </div>
-                                <p className="text-xs text-zinc-300 leading-relaxed font-sans bg-zinc-900/50 p-2.5 rounded border border-zinc-800/60">
-                                  "{ans.answer}"
-                                </p>
+                                <div 
+                                  className="copilot-markdown text-xs text-zinc-300 leading-relaxed font-sans bg-zinc-900/50 p-2.5 rounded border border-zinc-800/60"
+                                  dangerouslySetInnerHTML={{ __html: renderMarkdown(ans.answer) }}
+                                />
                               </div>
                             ))}
                           </div>

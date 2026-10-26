@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import CopilotChatGPT from '../components/CopilotChatGPT.tsx';
+
+const geminiApiKey = import.meta.env.GEMINI_API_KEY || "";
 ---
 
 <Layout 
@@ -8,5 +10,5 @@ import CopilotChatGPT from '../components/CopilotChatGPT.tsx';
   description="Asistente interactivo al estilo ChatGPT para Karla: generación de paquetes de postulación (email, cover letter, CV en LaTeX) y notas para Notion"
   containerClass="max-w-7xl px-2 sm:px-4 py-2 sm:py-3"
 >
-  <CopilotChatGPT client:load />
+  <CopilotChatGPT initialApiKey={geminiApiKey} client:load />
 </Layout>
