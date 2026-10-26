@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import CopilotChat from '../components/CopilotChat.tsx';
 
 interface Props {
   title?: string;
@@ -84,5 +85,8 @@ const {
     <footer class="border-t border-zinc-800/60 py-6 text-center text-xs text-zinc-400 font-mono">
       JobSearch Ops • Coordinación Jesús & Karla • Astro 6 + Tailwind
     </footer>
+
+    <!-- Asistente Copilot Flotante para Karla (Isla React) -->
+    <CopilotChat client:load />
   </body>
 </html>

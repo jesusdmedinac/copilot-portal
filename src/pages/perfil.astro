@@ -68,7 +68,7 @@ const elevatorPitch = "Senior Mobile Engineer with 10 years of experience archit
     </section>
 
     <!-- Sección 1: Rol Actual y Trayectoria Laboral -->
-    <section class="space-y-6">
+    <section id="trayectoria" class="space-y-6 scroll-mt-20">
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-lg font-bold text-zinc-100 tracking-tight">Trayectoria Profesional Verificada</h2>
@@ -79,8 +79,9 @@ const elevatorPitch = "Senior Mobile Engineer with 10 years of experience archit
       <div class="space-y-4">
         {profile.work.map((job, idx) => {
           const isCurrent = job.endDate === null;
+          const cardId = job.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
           return (
-            <div class={`p-5 md:p-6 rounded-xl border transition-all ${
+            <div id={cardId} class={`p-5 md:p-6 rounded-xl border transition-all scroll-mt-24 ${
               isCurrent 
                 ? 'border-indigo-500/40 bg-zinc-900/60 shadow-sm shadow-indigo-500/5' 
                 : 'border-zinc-800/80 bg-zinc-900/30'
@@ -132,7 +133,7 @@ const elevatorPitch = "Senior Mobile Engineer with 10 years of experience archit
     </section>
 
     <!-- Sección 2: Proyectos Clave y Código Abierto -->
-    <section class="space-y-6">
+    <section id="proyectos" class="space-y-6 scroll-mt-20">
       <div>
         <h2 class="text-lg font-bold text-zinc-100 tracking-tight">Proyectos de Autoría y Código Abierto</h2>
         <p class="text-xs text-zinc-400">Pruebas técnicas reales para citar en postulaciones y respuestas</p>
