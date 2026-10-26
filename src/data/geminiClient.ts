@@ -17,38 +17,55 @@ export function buildSystemPrompt(): string {
    - Residencia actual: San Leandro, CA (San Francisco Bay Area).
    - ¿Autorizado para trabajar legalmente en EE.UU.?: YES.
    - ¿Requerirá patrocinio de visa?: YES (Visa TN bajo tratado T-MEC/USMCA para ciudadanos mexicanos). Es un trámite consular/fronterizo expedito de 2 a 3 semanas con carta oferta, sin lotería ni cupos anuales.
-5. EXPERIENCIA EN IOS Y CROSS-PLATFORM:
-   - Especialista en Kotlin Multiplatform (KMP), compartiendo 100% de la lógica de negocio, arquitectura, datos y networking entre Android e iOS. Colabora fluidamente con ingenieros de iOS exponiendo APIs Swift nativas mediante SKIE y Swift Package Manager.
-6. PROYECTOS OPEN SOURCE REALES:
+5. EXPERIENCIA TÉCNICA CLAVE:
+   - Kotlin Multiplatform (KMP), compartiendo 100% de la lógica de negocio, arquitectura, datos y networking entre Android e iOS.
+   - Android nativo (Jetpack Compose, Clean Architecture, MVI).
+   - iOS nativo & interop moderno (Swift, SKIE, SPM).
+   - React Native & TypeScript para ejecución rápida de MVPs y prototipos de alto rendimiento.
+   - Server-Driven UI (SDUI) para actualización dinámica de componentes móviles.
+6. PROYECTOS OPEN SOURCE Y CRUCIALES:
    - json-to-compose: Motor Server-Driven UI nativo para Compose Multiplatform (github.com/jesusdmedinac/json-to-compose).
    - Zora Community: App automotriz de referencia en Kotlin Toolchain, SQLDelight y MVI (github.com/jesusdmedinac/zora-community).
    - KMP CLI: Suite de arquitectura y diagnóstico multiplataforma (github.com/jesusdmedinac/kmp-cli).
    - Academia Desde0: Plataforma educativa donde formó a más de 2,000 desarrolladores.
 
-=== TUS CAPACIDADES Y ESTRUCTURA DE SALIDA ===
-Analiza el texto pegado por Karla y responde estructuradamente.
+=== TUS CAPACIDADES Y CLASIFICACIÓN INTELIGENTE ===
 
-Si el texto es un POST DE LINKEDIN o contiene un email:
-- Extrae el correo de contacto y el nombre de la empresa/rol.
-- Genera el Asunto del correo.
-- Redacta el cuerpo del email en inglés, ultra directo (menos de 15 líneas).
+1. POSTS DE REDES SOCIALES O LINKEDIN (OUTREACH DIRECTO):
+   A) DETECCIÓN DE CANAL EXACTO:
+      - Si el post contiene un CORREO ELECTRÓNICO (ej: jobs@company.com):
+        * Canal: ✉️ Correo Electrónico.
+        * Extrae el email del destinatario.
+        * Genera el Asunto delimitado por [EMAIL_SUBJECT]Asunto...[/EMAIL_SUBJECT].
+        * Genera el cuerpo del correo en inglés delimitado por [OUTREACH_MESSAGE]Hi...[/OUTREACH_MESSAGE].
+      - Si el post NO tiene correo y pide "DM me", "send a message", "reach out", o es una publicación social:
+        * Canal: 💬 LinkedIn DM / Mensaje Directo.
+        * NO GENERES "Asunto" (en chats/DMs de LinkedIn no existe asunto).
+        * Genera el mensaje para el chat delimitado por [OUTREACH_MESSAGE]Hi...[/OUTREACH_MESSAGE]. Debe ser ultra ágil (menos de 10-12 líneas), directo al grano, respondiendo puntualmente a las preguntas o requisitos planteados en el post.
+      - Si el autor pide comentar en la publicación ("comment below with your portfolio/github"):
+        * Genera un micro-comentario sugerido de 1 línea delimitado por [COMENTARIO_POST]Sent you a DM with my GitHub and portfolio! Looking forward to connecting.[/COMENTARIO_POST].
 
-Si el texto es un JOB DESCRIPTION de ATS (Greenhouse, Lever, etc.):
-- Extrae empresa, rol y tecnologías clave.
-- Genera el código LaTeX (.tex) completo con la plantilla moderncv (banking style), sintonizando los bullet points de Wells Fargo y KMP para destacar las palabras clave del puesto.
-- Genera el Cover Letter en inglés con tono de ingeniería de sistemas.
-- Genera las respuestas a las preguntas típicas (Why Us, Liderazgo, Visa TN).
+   B) DISTINCIÓN: EMPRESA CORPORATIVA vs PROYECTO PERSONAL / SIDE PROJECT MVP:
+      - Si el autor menciona "side project", "my personal project", "freelance MVP", "milestone-based":
+        * ADVIERTE CLARAMENTE A KARLA: Indica que se trata del proyecto personal del autor y NO de la empresa de su empleo regular (ej: "Proyecto Personal / Side Project MVP de Valentina - NO confundir con Porsche Informatik").
+        * CALIBRA EL MENSAJE: Enfatiza velocidad de entrega (MVP shipping velocity), autonomía técnica, despliegues comprobados en App Store/Google Play y disponibilidad inmediata por hitos. Menciona Wells Fargo como sello de experiencia pero sin sonar rígido o excesivamente corporativo.
 
-Si Karla hace una PREGUNTA QUE NO ESTÁ en la base oficial:
-- Redacta una respuesta óptima basada en el perfil de Jesús.
-- Incluye el bloque especial para Notion:
-[NUEVA_PREGUNTA_NOTION]
-* Pregunta: ...
-* Respuesta Sugerida: ...
-* Nota: Pega esto en Notion para que Jesús lo revise.
-[/NUEVA_PREGUNTA_NOTION]
+2. VACANTES DE PORTALES O JOB DESCRIPTIONS DE ATS (Greenhouse, Lever, Workday, etc.):
+   - Extrae empresa, rol y tecnologías clave.
+   - Genera el código LaTeX (.tex) completo con la plantilla moderncv (banking style), sintonizando los bullet points de Wells Fargo y KMP para destacar las palabras clave del puesto.
+   - Genera el Cover Letter en inglés con tono sobrio de ingeniería de software delimitado por [COVER_LETTER]...[/COVER_LETTER].
+   - Genera respuestas a las preguntas típicas (Why Us, Liderazgo, Visa TN).
 
-Usa markdown limpio y claro.`;
+3. PREGUNTAS INDIVIDUALES O DUDAS DE FORMULARIO:
+   - Responde directamente con base en el perfil verificado de Jesús.
+   - Si la pregunta no está registrada en la base oficial de preguntas, incluye el bloque especial:
+   [NUEVA_PREGUNTA_NOTION]
+   * Pregunta: ...
+   * Respuesta Sugerida: ...
+   * Nota: Karla: Pega este bloque en las notas de la vacante en Notion.
+   [/NUEVA_PREGUNTA_NOTION]
+
+Usa markdown limpio, profesional y perfectamente estructurado para que Karla pueda leer la orientación y accionar con 1 toque desde su tablet.`;
 }
 
 export async function callGeminiApi(prompt: string, apiKey: string): Promise<string> {
@@ -111,28 +128,62 @@ export function parseGeminiResponseToPackage(llmText: string, originalQuery: str
     latexCv = latexMatch[1].trim();
   }
 
-  // Extraer Cover Letter si viene etiquetada
+  // Extraer Cover Letter si viene delimitada por tag o encabezado
   let coverLetter: string | undefined;
-  const coverMatch = llmText.match(/(?:##\s*(?:Cover Letter|Carta de Presentación)|Cover Letter:)\s*\n+([\s\S]*?)(?=\n##|\n\[|$)/i);
-  if (coverMatch) {
-    coverLetter = coverMatch[1].trim();
+  const coverTagMatch = llmText.match(/\[COVER_LETTER\]([\s\S]*?)\[\/COVER_LETTER\]/);
+  if (coverTagMatch) {
+    coverLetter = coverTagMatch[1].trim();
+  } else {
+    const coverMatch = llmText.match(/(?:##\s*(?:Cover Letter|Carta de Presentación)|Cover Letter:)\s*\n+([\s\S]*?)(?=\n##|\n\[|$)/i);
+    if (coverMatch) {
+      coverLetter = coverMatch[1].trim();
+    }
   }
 
-  // Extraer email draft si existe
+  // Extraer micro-comentario para el post
+  let commentDraft: string | undefined;
+  const commentTagMatch = llmText.match(/\[COMENTARIO_POST\]([\s\S]*?)\[\/COMENTARIO_POST\]/);
+  if (commentTagMatch) {
+    commentDraft = commentTagMatch[1].trim();
+  }
+
+  // Extraer Asunto (solo si viene explícito por tag o en correo)
   let emailSubject: string | undefined;
+  const subjectTagMatch = llmText.match(/\[EMAIL_SUBJECT\]([\s\S]*?)\[\/EMAIL_SUBJECT\]/);
+  if (subjectTagMatch) {
+    emailSubject = subjectTagMatch[1].trim();
+  } else if (/@/.test(originalQuery) || /\[CANAL:\s*EMAIL\]/i.test(llmText)) {
+    const subjectMatch = llmText.match(/(?:Subject|Asunto):\s*([^\n]+)/i);
+    if (subjectMatch) {
+      emailSubject = subjectMatch[1].trim();
+    }
+  }
+
+  // Extraer mensaje de outreach (correo o DM)
   let emailDraft: string | undefined;
-  const subjectMatch = llmText.match(/(?:Subject|Asunto):\s*([^\n]+)/i);
-  if (subjectMatch) {
-    emailSubject = subjectMatch[1].trim();
+  const outreachTagMatch = llmText.match(/\[OUTREACH_MESSAGE\]([\s\S]*?)\[\/OUTREACH_MESSAGE\]/);
+  if (outreachTagMatch) {
+    emailDraft = outreachTagMatch[1].trim();
   }
 
   // Determinar tipo
-  const isLinkedIn = originalQuery.toLowerCase().includes('linkedin') || /@/.test(originalQuery);
-  const isAts = originalQuery.length > 150 || /requirements|responsibilities/i.test(originalQuery);
+  const isLinkedIn = originalQuery.toLowerCase().includes('linkedin') || 
+                     /@/.test(originalQuery) || 
+                     /freelance|side project|mvp|wanted|hiring/i.test(originalQuery);
+  const isAts = originalQuery.length > 250 || /requirements|responsibilities|job description/i.test(originalQuery);
 
-  // Limpiar summaryNote para que no duplique el bloque LaTeX si ya fue extraído
+  // Si no hubo tag pero es LinkedIn / email, fallback al texto
+  if (!emailDraft && isLinkedIn && !isAts) {
+    emailDraft = llmText;
+  }
+
+  // Limpiar summaryNote para que no muestre etiquetas internas ni duplique LaTeX
   let cleanSummary = llmText
     .replace(/\[NUEVA_PREGUNTA_NOTION\][\s\S]*?\[\/NUEVA_PREGUNTA_NOTION\]/g, '')
+    .replace(/\[EMAIL_SUBJECT\][\s\S]*?\[\/EMAIL_SUBJECT\]/g, '')
+    .replace(/\[OUTREACH_MESSAGE\][\s\S]*?\[\/OUTREACH_MESSAGE\]/g, '')
+    .replace(/\[COMENTARIO_POST\][\s\S]*?\[\/COMENTARIO_POST\]/g, '')
+    .replace(/\[COVER_LETTER\][\s\S]*?\[\/COVER_LETTER\]/g, '')
     .trim();
 
   if (latexCv) {
@@ -142,13 +193,21 @@ export function parseGeminiResponseToPackage(llmText: string, originalQuery: str
       .trim();
   }
 
+  // Si cleanSummary quedó vacío porque todo estaba en tags, darle un texto limpio de entrada
+  if (!cleanSummary && emailDraft) {
+    cleanSummary = emailSubject 
+      ? `### ✉️ Borrador de Correo Preparado\nAquí tienes el correo listo para enviar.`
+      : `### 💬 Mensaje Directo Preparado\nAquí tienes el mensaje directo listo para enviar por LinkedIn.`;
+  }
+
   return {
     type: isLinkedIn ? 'linkedin-email' : isAts ? 'ats-package' : 'qa-answer',
     summaryNote: cleanSummary,
     latexCv,
     coverLetter,
     emailSubject,
-    emailDraft: isLinkedIn ? llmText : undefined,
+    emailDraft,
+    commentDraft,
     notionSyncSnippet: notionSnippet
   };
 }

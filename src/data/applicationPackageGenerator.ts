@@ -8,6 +8,7 @@ export interface ApplicationPackage {
   contactEmail?: string;
   emailSubject?: string;
   emailDraft?: string;
+  commentDraft?: string;
   coverLetter?: string;
   latexCv?: string;
   atsAnswers?: { question: string; answer: string; tag: string }[];

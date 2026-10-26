@@ -518,19 +518,21 @@ export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTPro
                     {msg.pkg && (
                       <div className="space-y-4 pt-2">
                         
-                        {/* CASO: BORRADOR DE EMAIL (LinkedIn Post) */}
+                        {/* CASO: MENSAJE DE OUTREACH (Email o LinkedIn DM) */}
                         {msg.pkg.emailDraft && (
                           <div className="p-4 rounded-xl bg-zinc-950 border border-zinc-800 space-y-3">
                             <div className="flex items-center justify-between pb-2 border-b border-zinc-800/80">
                               <span className="font-mono text-xs text-indigo-400 font-bold uppercase tracking-wider">
-                                ✉️ Borrador de Email Listo para Enviar
+                                {msg.pkg.emailSubject ? '✉️ Borrador de Email Listo para Enviar' : '💬 Mensaje Directo para LinkedIn DM'}
                               </span>
                               <button
                                 onClick={() => handleCopy(msg.pkg!.emailDraft!, `email-${idx}`)}
                                 type="button"
                                 className="px-3 py-1 rounded-lg text-xs font-mono bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/40 transition-all flex items-center gap-1 active:scale-95 cursor-pointer font-semibold"
                               >
-                                {copiedKey === `email-${idx}` ? '✓ Copiado' : '📋 Copiar Email'}
+                                {copiedKey === `email-${idx}` 
+                                  ? '✓ Copiado' 
+                                  : (msg.pkg.emailSubject ? '📋 Copiar Email' : '📋 Copiar Mensaje')}
                               </button>
                             </div>
 
@@ -544,6 +546,27 @@ export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTPro
                             <pre className="text-xs text-zinc-200 whitespace-pre-wrap font-sans leading-relaxed bg-zinc-900/50 p-3 rounded-lg border border-zinc-800/60 select-all">
 {msg.pkg.emailDraft}
                             </pre>
+                          </div>
+                        )}
+
+                        {/* CASO: MICRO-COMENTARIO PARA EL POST PÚBLICO */}
+                        {msg.pkg.commentDraft && (
+                          <div className="p-3.5 rounded-xl bg-zinc-950 border border-zinc-800 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="font-mono text-xs text-indigo-400 font-bold uppercase tracking-wider">
+                                💬 Comentario Sugerido para la Publicación
+                              </span>
+                              <button
+                                onClick={() => handleCopy(msg.pkg!.commentDraft!, `comment-${idx}`)}
+                                type="button"
+                                className="px-2.5 py-1 rounded-lg text-xs font-mono bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 transition-all flex items-center gap-1 cursor-pointer font-semibold"
+                              >
+                                {copiedKey === `comment-${idx}` ? '✓ Copiado' : '📋 Copiar Comentario'}
+                              </button>
+                            </div>
+                            <p className="text-xs text-zinc-300 leading-relaxed font-sans bg-zinc-900/50 p-2.5 rounded border border-zinc-800/60">
+                              "{msg.pkg.commentDraft}"
+                            </p>
                           </div>
                         )}
 
