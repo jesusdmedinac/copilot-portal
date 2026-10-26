@@ -7,11 +7,13 @@ import AuthStatus from '../components/AuthStatus.tsx';
 interface Props {
   title?: string;
   description?: string;
+  containerClass?: string;
 }
 
 const { 
   title = "Copilot Ops | Portal Karla", 
-  description = "Base de conocimiento y asistente operativo para postulaciones laborales" 
+  description = "Base de conocimiento y asistente operativo para postulaciones laborales",
+  containerClass = "max-w-5xl px-4 py-8"
 } = Astro.props;
 
 const portalPin = import.meta.env.PORTAL_PIN || "2026";
@@ -61,6 +63,13 @@ const portalPin = import.meta.env.PORTAL_PIN || "2026";
             >
               Guías y Respuestas
             </a>
+            <a 
+              href="/copilot" 
+              class="px-3 py-1.5 rounded-lg text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 border border-indigo-500/20 transition-colors flex items-center gap-1.5 font-semibold"
+            >
+              <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
+              Copilot Chat
+            </a>
           </nav>
         </div>
 
@@ -69,14 +78,18 @@ const portalPin = import.meta.env.PORTAL_PIN || "2026";
 
       <!-- Barra de navegación móvil/tablet inferior en el header -->
       <nav class="sm:hidden flex items-center justify-around border-t border-zinc-800/50 px-2 py-2 font-mono text-xs bg-zinc-900/40">
-        <a href="/" class="px-3 py-1 text-zinc-400 hover:text-zinc-100">Inicio</a>
-        <a href="/perfil" class="px-3 py-1 text-zinc-400 hover:text-zinc-100">Perfil</a>
-        <a href="/guias" class="px-3 py-1 text-zinc-400 hover:text-zinc-100">Guías</a>
+        <a href="/" class="px-2.5 py-1 text-zinc-400 hover:text-zinc-100">Inicio</a>
+        <a href="/perfil" class="px-2.5 py-1 text-zinc-400 hover:text-zinc-100">Perfil</a>
+        <a href="/guias" class="px-2.5 py-1 text-zinc-400 hover:text-zinc-100">Guías</a>
+        <a href="/copilot" class="px-2.5 py-1 text-indigo-400 font-semibold flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+          Copilot
+        </a>
       </nav>
     </header>
 
     <!-- Contenido principal -->
-    <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-8">
+    <main class={`flex-1 w-full mx-auto ${containerClass}`}>
       <slot />
     </main>
 
