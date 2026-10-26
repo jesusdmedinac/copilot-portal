@@ -1,30 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import CopilotWorkbench from '../components/CopilotWorkbench.tsx';
+import CopilotChatGPT from '../components/CopilotChatGPT.tsx';
 ---
 
 <Layout 
-  title="Copilot Operativo • Pantalla Completa" 
-  description="Asistente interactivo con citas exactas y espacio de trabajo de pantalla completa para Karla"
-  containerClass="max-w-6xl px-3 sm:px-6 py-4"
+  title="Copilot Operativo • Asistente de Postulaciones" 
+  description="Asistente interactivo al estilo ChatGPT para Karla: generación de paquetes de postulación (email, cover letter, CV en LaTeX) y notas para Notion"
+  containerClass="max-w-7xl px-2 sm:px-4 py-2 sm:py-3"
 >
-  <div class="space-y-4">
-    <!-- Breadcrumb / Status Bar -->
-    <div class="flex items-center justify-between text-xs font-mono text-zinc-400 pb-1">
-      <div class="flex items-center gap-2">
-        <a href="/" class="hover:text-zinc-200 transition-colors">Inicio</a>
-        <span>/</span>
-        <span class="text-zinc-200">Copilot Workbench</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="hidden sm:inline text-zinc-500">Sesión Verificada</span>
-        <span class="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[11px]">
-          Base Oficial
-        </span>
-      </div>
-    </div>
-
-    <!-- Workbench a Pantalla Completa (Isla React) -->
-    <CopilotWorkbench client:load />
-  </div>
+  <CopilotChatGPT client:load />
 </Layout>
