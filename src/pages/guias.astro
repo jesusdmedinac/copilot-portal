@@ -1,0 +1,146 @@
+---
+import Layout from '../layouts/Layout.astro';
+import guides from '../data/guides.json';
+import CopyButton from '../components/CopyButton.tsx';
+---
+
+<Layout title="Guías de Redacción y Respuestas • Copilot Ops">
+  <div class="space-y-10 max-w-4xl mx-auto">
+    
+    <!-- Barra de navegación rápida y anclas -->
+    <nav class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800 pb-4">
+      <a href="/" class="text-xs font-mono text-zinc-400 hover:text-zinc-200 flex items-center gap-1.5 transition-colors">
+        ← Volver al Inicio
+      </a>
+      <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 font-mono text-xs">
+        <a href="#reglas" class="px-2.5 py-1 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 transition-colors shrink-0">
+          # Reglas
+        </a>
+        <a href="#respuestas" class="px-2.5 py-1 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 transition-colors shrink-0">
+          # Respuestas
+        </a>
+        <a href="#outreach" class="px-2.5 py-1 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-800 transition-colors shrink-0">
+          # Outreach
+        </a>
+      </div>
+    </nav>
+
+    <!-- Header de la sección -->
+    <section class="p-6 md:p-8 rounded-2xl border border-zinc-800 bg-gradient-to-b from-zinc-900/90 to-zinc-950">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-3">
+        <span>Base de Redacción y Plantillas Oficiales</span>
+      </div>
+      <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-zinc-100">
+        Guías de Postulación y Formularios
+      </h1>
+      <p class="mt-2 text-zinc-400 text-sm md:text-base leading-relaxed max-w-2xl">
+        Respuestas autorizadas y directrices de comunicación para completar postulaciones en Greenhouse, Lever, Workday y mensajes de contacto en LinkedIn.
+      </p>
+    </section>
+
+    <!-- Sección 1: Reglas Maestras de Redacción -->
+    <section id="reglas" class="space-y-4 scroll-mt-20">
+      <div class="border-b border-zinc-800/80 pb-2">
+        <h2 class="text-lg font-bold text-zinc-100 tracking-tight">1. Reglas Maestras de Redacción</h2>
+        <p class="text-xs text-zinc-400">Directrices para mantener el tono profesional, sobrio y de alto impacto de Jesús</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {guides.writingRules.map((rule) => (
+          <div class="p-5 rounded-xl border border-zinc-800/80 bg-zinc-900/30 flex flex-col justify-between">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-sm text-zinc-100">{rule.rule}</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-zinc-800 text-zinc-300 border border-zinc-700">
+                  {rule.badge}
+                </span>
+              </div>
+              <p class="text-xs text-zinc-400 leading-relaxed">
+                {rule.description}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Sección 2: Respuestas Oficiales para Formularios -->
+    <section id="respuestas" class="space-y-6 scroll-mt-20">
+      <div class="border-b border-zinc-800/80 pb-2">
+        <h2 class="text-lg font-bold text-zinc-100 tracking-tight">2. Respuestas Reutilizables para Formularios</h2>
+        <p class="text-xs text-zinc-400">Respuestas autorizadas con botón de copiado en 1 clic para formularios ATS</p>
+      </div>
+
+      <div class="space-y-5">
+        {guides.formAnswers.map((item) => (
+          <div id={item.id} class="p-5 md:p-6 rounded-xl border border-zinc-800 bg-zinc-900/40 space-y-4">
+            
+            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+              <div>
+                <h3 class="font-bold text-base text-zinc-100">{item.title}</h3>
+                <p class="text-xs font-mono text-zinc-400 mt-0.5">{item.promptEn}</p>
+                <p class="text-[11px] text-zinc-400 italic mt-0.5">({item.promptEs})</p>
+              </div>
+              <div class="shrink-0">
+                <CopyButton client:load text={item.answer} label="Copiar Respuesta" />
+              </div>
+            </div>
+
+            <!-- Caja con la respuesta oficial -->
+            <div class="p-4 rounded-lg bg-zinc-950/80 border border-zinc-800/80 text-xs text-zinc-200 leading-relaxed font-sans">
+              "{item.answer}"
+            </div>
+
+            <!-- Recomendación operativa y etiquetas -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 text-xs border-t border-zinc-800/60">
+              <div class="text-[11px] text-amber-400/90 flex items-center gap-1.5">
+                <span class="font-bold font-mono">💡 Tip:</span>
+                <span>{item.guidance}</span>
+              </div>
+
+              <div class="flex flex-wrap gap-1.5">
+                {item.tags.map((tag) => (
+                  <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-zinc-800/80 text-zinc-400">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Sección 3: Mensajes Rápidos de Outreach -->
+    <section id="outreach" class="space-y-6 scroll-mt-20">
+      <div class="border-b border-zinc-800/80 pb-2">
+        <h2 class="text-lg font-bold text-zinc-100 tracking-tight">3. Plantillas de Outreach en LinkedIn</h2>
+        <p class="text-xs text-zinc-400">Mensajes directos para contactar a Engineering Managers y Recruiters</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {guides.outreachTemplates.map((template) => (
+          <div id={template.id} class="p-5 rounded-xl border border-zinc-800 bg-zinc-900/40 flex flex-col justify-between space-y-4">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-bold text-sm text-zinc-100">{template.title}</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                  {template.target}
+                </span>
+              </div>
+              <pre class="p-3.5 rounded-lg bg-zinc-950/80 border border-zinc-800/80 text-xs text-zinc-300 font-sans whitespace-pre-wrap leading-relaxed">
+{template.text}
+              </pre>
+            </div>
+
+            <div class="pt-3 border-t border-zinc-800/60 flex justify-end">
+              <CopyButton client:load text={template.text} label="Copiar Mensaje" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+  </div>
+</Layout>

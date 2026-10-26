@@ -1,0 +1,85 @@
+{
+  "writingRules": [
+    {
+      "rule": "Longitud Muy Breve",
+      "badge": "Anti-Muros de Texto",
+      "description": "Máximo 1 o 2 párrafos concisos. Los reclutadores y hiring managers dedican menos de 10 segundos a una primera lectura."
+    },
+    {
+      "rule": "Tono Directo y Profesional",
+      "badge": "Cero Adorno Vacío",
+      "description": "Eliminar saludos acartonados como 'I hope this email finds you well' o frases serviles. Hablar de colega de ingeniería a colega de ingeniería."
+    },
+    {
+      "rule": "Estructura en 3 Pasos",
+      "badge": "Estructura Ejecutiva",
+      "description": "1) Fit inmediato con el stack; 2) Valor medible entregado (Wells Fargo, json-to-compose, KMP); 3) Call to Action rápido."
+    },
+    {
+      "rule": "Prohibición Estricta de HansellApp",
+      "badge": "Regla Mandatoria",
+      "description": "NUNCA mencionar HansellApp. Fue un proxy comercial de agencia obsoleto. El rol actual es Wells Fargo desde 2025-01."
+    }
+  ],
+  "formAnswers": [
+    {
+      "id": "why-us",
+      "title": "Why Us / Role Excitement",
+      "promptEn": "Tell us a bit about why you're applying to work here. What excited you about this role?",
+      "promptEs": "¿Por qué quieres trabajar aquí? ¿Qué te entusiasma de este rol?",
+      "answer": "With 10 years of mobile engineering experience focused on the Android SDK, Kotlin Multiplatform (KMP), and modular client architecture, I am drawn to your commitment to engineering excellence at massive scale. What excites me most about this role is the opportunity to shape mobile platform foundations that directly empower product teams and elevate developer velocity. Having built tools like json-to-compose (a native Compose Multiplatform rendering engine) and integrated AI-assisted workflows into daily development cycles, I am eager to help define the next generation of mobile architecture.",
+      "tags": ["Motivación", "Arquitectura", "KMP", "Plataforma"],
+      "guidance": "Reemplazar genéricos por el nombre específico de la empresa si el formulario lo permite, manteniendo intacta la mención a KMP y json-to-compose."
+    },
+    {
+      "id": "mission-empowerment",
+      "title": "Misión, Propósito e Impacto Social",
+      "promptEn": "Tell us about our mission or purpose and what it means to you.",
+      "promptEs": "¿Qué significa para ti nuestra misión o propósito de impacto?",
+      "answer": "To me, mission-driven software is deeply rooted in a mobile-first philosophy—building intuitive, low-friction software to expand accessibility for communities that have historically been underserved. Coming from a background where access to technology transformed my own trajectory, I founded Academia Desde0 to democratize mobile tech education for over 2,000 Spanish-speaking developers. In this role, that translates to engineering reliable, high-trust mobile platforms that millions rely on daily, ensuring that access and autonomy are within everyone's reach.",
+      "tags": ["Misión", "Inclusión", "Academia Desde0", "Mobile-First"],
+      "guidance": "Ideal para empresas con preguntas sobre impacto (Block/Cash App, Nubank, Uber, organizaciones fintech o de salud)."
+    },
+    {
+      "id": "leadership-mentorship",
+      "title": "Liderazgo Técnico, Mentoría y Calidad",
+      "promptEn": "Describe your technical leadership style and approach to mentorship.",
+      "promptEs": "Describe tu estilo de liderazgo técnico y mentoría en equipos de ingeniería.",
+      "answer": "As a Senior/Staff-level engineer, I believe strong technical leadership is about multiplying the impact of those around you. Beyond architecting modular Android and KMP solutions, I have mentored 20+ engineers, reduced bug density through strict TDD practices, and established collaborative pair programming and structured code reviews. I thrive in environments that value structured concurrency, continuous learning, and pragmatic velocity.",
+      "tags": ["Liderazgo", "Mentoría", "TDD", "Staff"],
+      "guidance": "Resalta la multiplicación de impacto sobre la codificación individual aislada."
+    },
+    {
+      "id": "ios-cross-platform",
+      "title": "Experiencia en iOS y Cross-Platform (KMP)",
+      "promptEn": "Do you have iOS development experience or cross-platform mobile expertise?",
+      "promptEs": "¿Tienes experiencia en desarrollo iOS o tecnologías multiplataforma?",
+      "answer": "My cross-platform expertise centers on Kotlin Multiplatform (KMP), enabling 100% shared business logic, networking, and data layers between Android and iOS without runtime overhead. While my native deep-dive is Android SDK and Jetpack Compose, I routinely collaborate with iOS engineers to expose clean Swift-friendly APIs via SKIE, integrate CocoaPods/SPM dependencies, and maintain shared architecture across platforms.",
+      "tags": ["iOS", "KMP", "Cross-Platform", "Swift"],
+      "guidance": "Posicionar a Jesús como especialista en Kotlin Multiplatform que une ambos mundos, nunca como un 'novato en iOS'."
+    },
+    {
+      "id": "work-authorization-tn",
+      "title": "Autorización Laboral en EE.UU. (Visa TN)",
+      "promptEn": "Work authorization, sponsorship requirements, and legal status in the US.",
+      "promptEs": "¿Requiere patrocinio de visa o autorización laboral en Estados Unidos?",
+      "answer": "Yes, I require visa sponsorship via the TN Visa category (USMCA/T-MEC treaty for Mexican citizens). I currently reside in San Leandro, CA (SF Bay Area) and hold professional engineering degrees from IUT de La Rochelle and UTT. TN visa transfers/issuance take only 2-3 weeks with minimal employer paperwork and zero quota/lottery constraints.",
+      "tags": ["Visa TN", "Autorización", "San Leandro CA", "Legal"],
+      "guidance": "En casillas de opción múltiple: 'Are you authorized to work in the US?' -> YES. 'Will you now or in the future require sponsorship?' -> YES (TN Visa)."
+    }
+  ],
+  "outreachTemplates": [
+    {
+      "id": "outreach-hiring-manager",
+      "title": "Outreach para Engineering Manager / Mobile Lead",
+      "target": "Hiring Manager (LinkedIn / InMail)",
+      "text": "Hi [Name],\nI noticed your team is expanding its mobile engineering platform. With 10 years of mobile experience architecting large-scale Android banking flows at Wells Fargo and authoring open-source KMP engines (json-to-compose), I specialize in modular client architecture and developer velocity. Living locally in San Leandro, CA, I'd love to connect and learn more about your technical roadmap.\n\nBest regards,\nJesús Medina — https://jesusdmedinac.com"
+    },
+    {
+      "id": "outreach-recruiter",
+      "title": "Outreach para Technical Recruiter",
+      "target": "Recruiter / Talent Partner (LinkedIn)",
+      "text": "Hi [Name],\nI recently applied for the [Position Title] role. As a Senior/Staff Mobile Engineer based in the Bay Area with 10 years of experience in Android SDK internals and Kotlin Multiplatform, I wanted to reach out directly. I'd welcome the chance to share how my background in high-scale client platform architecture aligns with your team's needs.\n\nBest regards,\nJesús Medina — https://linkedin.com/in/jesusdmedinac"
+    }
+  ]
+}
