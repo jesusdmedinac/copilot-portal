@@ -1,0 +1,58 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { 
+  title = "Copilot Ops | Portal Karla", 
+  description = "Base de conocimiento y asistente operativo para postulaciones laborales" 
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body class="bg-zinc-950 text-zinc-100 flex flex-col min-h-screen">
+    <!-- Header de navegación superior -->
+    <header class="border-b border-zinc-800/80 bg-zinc-900/60 backdrop-blur sticky top-0 z-50">
+      <div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-mono font-bold text-sm">
+            JM
+          </div>
+          <div>
+            <span class="font-semibold text-sm tracking-tight text-zinc-100">Jesús Medina</span>
+            <span class="text-xs text-zinc-400 ml-1.5 font-mono">/ ops-portal</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            Célula Activa
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-8">
+      <slot />
+    </main>
+
+    <!-- Footer sobrio -->
+    <footer class="border-t border-zinc-800/60 py-6 text-center text-xs text-zinc-400 font-mono">
+      JobSearch Ops • Coordinación Jesús & Karla • Astro 6 + Tailwind
+    </footer>
+  </body>
+</html>

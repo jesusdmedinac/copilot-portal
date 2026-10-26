@@ -1,0 +1,42 @@
+---
+import Layout from '../layouts/Layout.astro';
+import StatusCard from '../components/StatusCard.tsx';
+---
+
+<Layout title="Copilot Ops • Portal de Postulaciones">
+  <div class="space-y-8">
+    <!-- Hero / Bienvenida para Karla -->
+    <section class="p-6 md:p-8 rounded-2xl border border-zinc-800 bg-gradient-to-b from-zinc-900/80 to-zinc-950 shadow-sm">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-4">
+        <span>Fase 1: Living Foundation</span>
+      </div>
+      <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-zinc-100">
+        Portal Operativo y Base de Conocimiento
+      </h1>
+      <p class="mt-2 text-zinc-400 text-sm md:text-base leading-relaxed max-w-2xl">
+        Espacio centralizado para Karla: consulta de perfil técnico verificado, respuestas oficiales para formularios y asistente para estructuración de postulaciones.
+      </p>
+
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a 
+          href="#perfil"
+          class="px-4 py-2 rounded-lg bg-zinc-100 text-zinc-950 font-medium text-xs md:text-sm hover:bg-white transition-colors"
+        >
+          Explorar Perfil Técnico
+        </a>
+        <a 
+          href="#guias"
+          class="px-4 py-2 rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 font-medium text-xs md:text-sm hover:bg-zinc-800 transition-colors"
+        >
+          Guías y Respuestas
+        </a>
+      </div>
+    </section>
+
+    <!-- Módulo interactivo de prueba (Isla de React) -->
+    <section class="space-y-3">
+      <h2 class="text-xs font-mono uppercase tracking-wider text-zinc-400">Verificación de Integraciones</h2>
+      <StatusCard client:load />
+    </section>
+  </div>
+</Layout>
