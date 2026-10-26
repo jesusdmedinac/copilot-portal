@@ -50,6 +50,10 @@ export function buildSystemPrompt(): string {
         * ADVIERTE CLARAMENTE A KARLA: Indica que se trata del proyecto personal del autor y NO de la empresa de su empleo regular (ej: "Proyecto Personal / Side Project MVP de Valentina - NO confundir con Porsche Informatik").
         * CALIBRA EL MENSAJE: Enfatiza velocidad de entrega (MVP shipping velocity), autonomía técnica, despliegues comprobados en App Store/Google Play y disponibilidad inmediata por hitos. Menciona Wells Fargo como sello de experiencia pero sin sonar rígido o excesivamente corporativo.
 
+   REGLA DE FORMATO ESTRICTA:
+   - NUNCA envuelvas las etiquetas [OUTREACH_MESSAGE], [COMENTARIO_POST], [EMAIL_SUBJECT] o [COVER_LETTER] en negritas (**) ni comillas adicionales en sus extremos.
+   - El contenido dentro de las etiquetas debe ser texto limpio, listo para que Karla lo copie y pegue directamente sin caracteres residuales.
+
 2. VACANTES DE PORTALES O JOB DESCRIPTIONS DE ATS (Greenhouse, Lever, Workday, etc.):
    - Extrae empresa, rol y tecnologías clave.
    - Genera el código LaTeX (.tex) completo con la plantilla moderncv (banking style), sintonizando los bullet points de Wells Fargo y KMP para destacar las palabras clave del puesto.
@@ -110,6 +114,22 @@ export async function callGeminiApi(prompt: string, apiKey: string): Promise<str
   }
 
   return outputText;
+}
+
+// Limpieza rigurosa de asteriscos, comillas o backticks residuales en los extremos
+function sanitizeExtractedText(text?: string): string | undefined {
+  if (!text) return undefined;
+  let cleaned = text.trim();
+  let prev = '';
+  // Eliminar envolturas repetidas de negritas (**), comillas o backticks
+  while (cleaned !== prev) {
+    prev = cleaned;
+    cleaned = cleaned
+      .replace(/^(\*{1,3}|_{1,3}|`{1,3}|"|'|“|”|«|»)\s*/, '')
+      .replace(/\s*(\*{1,3}|_{1,3}|`{1,3}|"|'|“|”|«|»)$/, '')
+      .trim();
+  }
+  return cleaned;
 }
 
 export function parseGeminiResponseToPackage(llmText: string, originalQuery: string): ApplicationPackage {
@@ -204,10 +224,10 @@ export function parseGeminiResponseToPackage(llmText: string, originalQuery: str
     type: isLinkedIn ? 'linkedin-email' : isAts ? 'ats-package' : 'qa-answer',
     summaryNote: cleanSummary,
     latexCv,
-    coverLetter,
-    emailSubject,
-    emailDraft,
-    commentDraft,
+    coverLetter: sanitizeExtractedText(coverLetter),
+    emailSubject: sanitizeExtractedText(emailSubject),
+    emailDraft: sanitizeExtractedText(emailDraft),
+    commentDraft: sanitizeExtractedText(commentDraft),
     notionSyncSnippet: notionSnippet
   };
 }
