@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
+    "dev:api": "astro build && wrangler pages dev dist",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",

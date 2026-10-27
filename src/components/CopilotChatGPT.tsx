@@ -157,22 +157,55 @@ export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTPro
       }));
 
     try {
-      if (apiKey) {
-        // Conexión real con Gemini 2.5 Flash con memoria conversacional multi-turno
+      let packageResolved = false;
+
+      // 1. Intentar primero a través de la API del servidor (/api/generate)
+      // Soporta local dev y Cloudflare Pages Functions sin requerir que Karla introduzca manualmente la key
+      try {
+        const response = await fetch('/api/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(apiKey ? { 'x-api-key': apiKey } : {})
+          },
+          body: JSON.stringify({
+            prompt: query,
+            apiKey: apiKey || undefined,
+            history
+          })
+        });
+
+        if (response.ok) {
+          const resJson = await response.json();
+          if (resJson.success && resJson.data) {
+            pkg = resJson.data;
+            rawOutput = resJson.rawOutput || '';
+            packageResolved = true;
+          }
+        }
+      } catch (apiErr) {
+        console.warn('Endpoint /api/generate no disponible o falló:', apiErr);
+      }
+
+      // 2. Fallback: Conexión directa del cliente con Gemini si hay API key en el navegador
+      if (!packageResolved && apiKey) {
         rawOutput = await callGeminiApi(query, apiKey, history);
         pkg = parseGeminiResponseToPackage(rawOutput, query);
-      } else {
-        // Motor determinista local
+        packageResolved = true;
+      }
+
+      // 3. Fallback: Motor local determinista estructurado
+      if (!packageResolved) {
         pkg = analyzeAndGeneratePackage(query);
       }
     } catch (err: any) {
-      console.error('Error llamando a Gemini API:', err);
+      console.error('Error generando paquete de postulación:', err);
       pkg = {
         type: 'general',
-        summaryNote: `⚠️ Error al conectar con el LLM: ${err.message || err}. Usando motor local de respaldo:`,
+        summaryNote: `⚠️ Error al conectar con el motor de IA: ${err.message || err}. Usando motor de respaldo:`,
         atsAnswers: [{
           question: query,
-          answer: 'Por favor verifica la API Key de Gemini en Ajustes.',
+          answer: 'Por favor verifica la conexión o la API Key de Gemini en Ajustes.',
           tag: 'Error API'
         }]
       };
@@ -533,33 +566,95 @@ export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTPro
                     {msg.pkg && (
                       <div className="space-y-4 pt-2">
                         
-                        {/* CASO: MENSAJE DE OUTREACH (Email o LinkedIn DM) */}
+                        {/* CASO: RECOMENDACIÓN DE CV DE LOS 3 ARQUETIPOS */}
+                        {msg.pkg.cvRecommendation && (
+                          <div className="p-4 rounded-xl bg-amber-950/20 border border-amber-500/30 space-y-2.5">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1 border-b border-amber-500/20">
+                              <span className="font-mono text-xs text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                                📄 CV Oficial a Adjuntar
+                              </span>
+                              {msg.pkg.cvLink && (
+                                <a
+                                  href={msg.pkg.cvLink}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 transition-all font-semibold cursor-pointer w-fit"
+                                >
+                                  <span>Abrir y Descargar PDF</span>
+                                  <span className="text-[10px]">↗</span>
+                                </a>
+                              )}
+                            </div>
+                            <div className="text-xs text-amber-200/90 leading-relaxed font-sans">
+                              {msg.pkg.cvRecommendation}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* CASO: MENSAJE DE OUTREACH (Email) */}
                         {msg.pkg.emailDraft && (
                           <div className="p-4 rounded-xl bg-zinc-950 border border-zinc-800 space-y-3">
                             <div className="flex items-center justify-between pb-2 border-b border-zinc-800/80">
                               <span className="font-mono text-xs text-indigo-400 font-bold uppercase tracking-wider">
-                                {msg.pkg.emailSubject ? '✉️ Borrador de Email Listo para Enviar' : '💬 Mensaje Directo para LinkedIn DM'}
+                                {msg.pkg.emailSubject ? '✉️ Correo de Postulación' : '💬 Mensaje de Postulación'}
                               </span>
                               <button
                                 onClick={() => handleCopy(msg.pkg!.emailDraft!, `email-${idx}`)}
                                 type="button"
                                 className="px-3 py-1 rounded-lg text-xs font-mono bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/40 transition-all flex items-center gap-1 active:scale-95 cursor-pointer font-semibold"
                               >
-                                {copiedKey === `email-${idx}` 
-                                  ? '✓ Copiado' 
-                                  : (msg.pkg.emailSubject ? '📋 Copiar Email' : '📋 Copiar Mensaje')}
+                                {copiedKey === `email-${idx}` ? '✓ Copiado' : '📋 Copiar Correo'}
                               </button>
                             </div>
 
                             {msg.pkg.emailSubject && (
-                              <div className="text-xs font-mono text-zinc-400">
-                                <span className="font-bold text-zinc-300">Asunto: </span>
-                                {msg.pkg.emailSubject}
+                              <div className="flex items-center justify-between gap-2 text-xs font-mono text-zinc-400 bg-zinc-900/40 p-2 rounded border border-zinc-800/40">
+                                <div>
+                                  <span className="font-bold text-zinc-300">Asunto: </span>
+                                  <span>{msg.pkg.emailSubject}</span>
+                                </div>
+                                <button
+                                  onClick={() => handleCopy(msg.pkg!.emailSubject!, `sub-${idx}`)}
+                                  type="button"
+                                  className="text-[11px] text-zinc-400 hover:text-indigo-300 px-2 py-0.5 rounded hover:bg-zinc-800 cursor-pointer"
+                                >
+                                  {copiedKey === `sub-${idx}` ? '✓' : 'Copiar'}
+                                </button>
                               </div>
                             )}
 
                             <pre className="text-xs text-zinc-200 whitespace-pre-wrap font-sans leading-relaxed bg-zinc-900/50 p-3 rounded-lg border border-zinc-800/60 select-all">
 {msg.pkg.emailDraft}
+                            </pre>
+                          </div>
+                        )}
+
+                        {/* CASO: NOTA DE CONEXIÓN DE LINKEDIN (< 200 caracteres) */}
+                        {msg.pkg.linkedinNote && (
+                          <div className="p-4 rounded-xl bg-zinc-950 border border-blue-900/40 space-y-3">
+                            <div className="flex items-center justify-between pb-2 border-b border-zinc-800/80">
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono text-xs text-blue-400 font-bold uppercase tracking-wider">
+                                  💬 Nota de Conexión de LinkedIn
+                                </span>
+                                <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
+                                  msg.pkg.linkedinNote.length <= 200 
+                                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
+                                    : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                                }`}>
+                                  {msg.pkg.linkedinNote.length}/200 caracteres
+                                </span>
+                              </div>
+                              <button
+                                onClick={() => handleCopy(msg.pkg!.linkedinNote!, `linkedin-${idx}`)}
+                                type="button"
+                                className="px-3 py-1 rounded-lg text-xs font-mono bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-500/40 transition-all flex items-center gap-1 active:scale-95 cursor-pointer font-semibold"
+                              >
+                                {copiedKey === `linkedin-${idx}` ? '✓ Copiado' : '📋 Copiar Nota'}
+                              </button>
+                            </div>
+                            <pre className="text-xs text-zinc-200 whitespace-pre-wrap font-sans leading-relaxed bg-zinc-900/50 p-3 rounded-lg border border-zinc-800/60 select-all">
+{msg.pkg.linkedinNote}
                             </pre>
                           </div>
                         )}

@@ -6,8 +6,11 @@ export interface ApplicationPackage {
   companyName?: string;
   roleTitle?: string;
   contactEmail?: string;
+  cvRecommendation?: string;
+  cvLink?: string;
   emailSubject?: string;
   emailDraft?: string;
+  linkedinNote?: string;
   commentDraft?: string;
   coverLetter?: string;
   latexCv?: string;
@@ -44,22 +47,32 @@ export function analyzeAndGeneratePackage(input: string): ApplicationPackage {
   else if (lower.includes('android')) role = 'Senior Android Engineer';
   else if (lower.includes('multiplatform') || lower.includes('kmp')) role = 'Senior Kotlin Multiplatform Engineer';
 
+  // Determinar arquetipo canónico adecuado
+  let cvRecommendation = 'Arquetipo 1: Android Platform & Core Architecture | URL: https://cv-ats-eyd.pages.dev/cv-android-platform/ | Motivo: Enfoque nativo en Android SDK, Compose y arquitectura de plataforma.';
+  let cvLink = 'https://cv-ats-eyd.pages.dev/cv-android-platform/';
+
+  if (lower.includes('multiplatform') || lower.includes('kmp') || lower.includes('cross-platform') || lower.includes('cross platform')) {
+    cvRecommendation = 'Arquetipo 2: Kotlin Multiplatform (KMP) Architect | URL: https://cv-ats-eyd.pages.dev/cv-kmp-architect/ | Motivo: Enfoque en código compartido multiplataforma Android/iOS con KMP y Kotlin Coroutines.';
+    cvLink = 'https://cv-ats-eyd.pages.dev/cv-kmp-architect/';
+  } else if (lower.includes('founding') || lower.includes('early stage') || lower.includes('startup') || lower.includes('0 to 1') || lower.includes('0-1') || lower.includes('react native')) {
+    cvRecommendation = 'Arquetipo 3: Founding Mobile & Product Engineer | URL: https://cv-ats-eyd.pages.dev/cv-founding-mobile/ | Motivo: Enfoque de producto 0-a-1, agilidad y desarrollo end-to-end (Android, KMP, React Native).';
+    cvLink = 'https://cv-ats-eyd.pages.dev/cv-founding-mobile/';
+  }
+
+  const linkedinNote = `Hi, saw your note for ${role} at ${company}. With 10 yrs in mobile platform at Wells Fargo & KMP, I would love to connect! Best, Jesús`.slice(0, 195);
+
   // CASO 1: Post de LinkedIn con Email de Contacto
   if (isLinkedInPost && emailMatch) {
     const email = emailMatch[1];
     const subject = `Staff / Senior Mobile Engineer — Jesús Medina (${role})`;
     const draft = `Hi,
 
-I came across your note regarding the ${role} opening at ${company}. With 10 years of mobile engineering experience architecting client platforms at Wells Fargo and authoring open-source Kotlin Multiplatform engines (json-to-compose), my background directly aligns with high-scale client platform engineering and developer velocity.
+Saw your note regarding the ${role} opening at ${company}.
+Currently Senior UI Engineer at Wells Fargo (Client Platform), I specialize in scaling high-performance Android systems, Jetpack Compose, modular architecture, and CI/CD pipelines.
+Authorized to work in the US (TN Visa status). Resume attached—let me know if you have time for a brief sync this week.
 
-I am based locally in San Leandro, CA (SF Bay Area) with full US work authorization via the expedited TN Visa category (USMCA treaty). I have attached my resume for your review.
-
-I would welcome the opportunity to connect and learn more about your technical priorities.
-
-Best regards,
-Jesús Daniel Medina Cruz
-https://jesusdmedinac.com | https://linkedin.com/in/jesusdmedinac
-+1 (470) 406-1747`;
+Best,
+Jesús Daniel Medina Cruz`;
 
     return {
       type: 'linkedin-email',
@@ -68,7 +81,10 @@ https://jesusdmedinac.com | https://linkedin.com/in/jesusdmedinac
       contactEmail: email,
       emailSubject: subject,
       emailDraft: draft,
-      summaryNote: `Detecté un post de LinkedIn con email de contacto (${email}). Se generó el borrador de email directo sin rodeos y adaptado al writing style de Jesús.`
+      linkedinNote,
+      cvRecommendation,
+      cvLink,
+      summaryNote: `Detecté un post de LinkedIn con email de contacto (${email}). Se generó el paquete completo de postulación (CV canónico, email directo en 3 pasos, nota de LinkedIn < 200 caracteres).`
     };
   }
 
@@ -81,15 +97,14 @@ https://jesusdmedinac.com | https://linkedin.com/in/jesusdmedinac
 
     const coverLetter = `Dear Hiring Team at ${company},
 
-I am writing to express my strong interest in the ${role} position. With a decade of dedicated mobile software engineering focused on Android platform architecture, developer velocity, and Kotlin Multiplatform (KMP), I have built a career around transforming complex, high-scale client systems into modular and reliable platforms.
+I am writing to express my interest in the ${role} position. As a Senior UI Engineer at Wells Fargo (Client Platform), I bring 10 years of mobile engineering experience architecting modular Android systems, Jetpack Compose UI, and cross-platform infrastructure with Kotlin Multiplatform (KMP).
 
-Currently at Wells Fargo as a Senior UI Engineer on the Client Platform team, I architected a centralized navigation architecture that consolidated over 10 fragmented entry points, driving UI modernization to Jetpack Compose while enforcing strict Clean Architecture and Unidirectional Data Flow. In parallel, as the creator of json-to-compose (a native Server-Driven UI engine for Compose Multiplatform) and founder of Academia Desde0, I actively advance modern multiplatform tooling and mentor engineering teams in test-driven development (TDD).
+At Wells Fargo, I lead client platform initiatives that consolidate core architecture, optimize CI/CD pipelines, and reduce defect density by 30% through disciplined TDD and Clean Architecture. My background directly bridges low-level mobile performance with high-velocity developer experience.
 
-I am drawn to ${company} for your dedication to scalable product engineering. I reside in San Leandro, CA (SF Bay Area) and hold expedited work authorization under the USMCA TN Visa status. I look forward to discussing how my experience can support your engineering roadmap.
+Authorized to work in the US under TN Visa status, I have attached my resume and look forward to discussing how my platform expertise can contribute to ${company}.
 
 Sincerely,
-Jesús Daniel Medina Cruz
-https://jesusdmedinac.com | +1 (470) 406-1747`;
+Jesús Daniel Medina Cruz`;
 
     const atsAnswers = [
       {
@@ -109,14 +124,29 @@ https://jesusdmedinac.com | +1 (470) 406-1747`;
       }
     ];
 
+    const emailSubject = `${role} Application - Jesús Medina`;
+    const emailDraft = `Hi,
+
+I am applying for the ${role} position at ${company}.
+Currently Senior UI Engineer at Wells Fargo (Client Platform), I specialize in scaling modular Android systems, Jetpack Compose, and CI/CD pipelines.
+Authorized to work in the US (TN Visa status). Resume attached—let me know if you have time for a brief sync this week.
+
+Best,
+Jesús Daniel Medina Cruz`;
+
     return {
       type: 'ats-package',
       companyName: company,
       roleTitle: role,
+      cvRecommendation,
+      cvLink,
+      emailSubject,
+      emailDraft,
+      linkedinNote,
       coverLetter,
       latexCv,
       atsAnswers,
-      summaryNote: `Detecté un Job Description completo para ${company} (${role}). Se generó el paquete integral de postulación: CV en LaTeX (ModernCV), Cover Letter personalizado y respuestas ATS.`
+      summaryNote: `Detecté un Job Description para ${company} (${role}). Se generó el paquete 4-en-1: CV Canónico recomendado, Correo de postulación, Nota de LinkedIn (< 200 chars) y Cover Letter sobrio de 3 párrafos.`
     };
   }
 
