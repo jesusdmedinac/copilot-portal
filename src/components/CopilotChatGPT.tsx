@@ -3,6 +3,7 @@ import { marked } from 'marked';
 import { analyzeAndGeneratePackage } from '../data/applicationPackageGenerator';
 import type { ApplicationPackage } from '../data/applicationPackageGenerator';
 import { callGeminiApi, parseGeminiResponseToPackage, GEMINI_STORAGE_KEY } from '../data/geminiClient';
+import type { ChatMessageContext } from '../data/geminiClient';
 import { STORAGE_KEY } from './PinGate';
 
 // Configurar marked para Markdown con soporte GFM y saltos de línea suaves
@@ -28,6 +29,7 @@ interface ThreadSession {
   messages: {
     sender: 'user' | 'assistant';
     text: string;
+    rawLlmOutput?: string;
     pkg?: ApplicationPackage;
     timestamp: string;
   }[];
@@ -140,11 +142,24 @@ export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTPro
     setIsThinking(true);
 
     let pkg: ApplicationPackage;
+    let rawOutput = '';
+
+    // Recuperar historial si estamos en una sesión activa existente
+    const activeSession = currentSessionId !== 'new'
+      ? sessions.find(s => s.id === currentSessionId)
+      : null;
+
+    const history: ChatMessageContext[] = (activeSession?.messages || [])
+      .slice(-10)
+      .map(m => ({
+        role: m.sender === 'user' ? 'user' : 'model',
+        text: m.rawLlmOutput || m.text
+      }));
 
     try {
       if (apiKey) {
-        // Conexión real con Gemini 2.0 Flash
-        const rawOutput = await callGeminiApi(query, apiKey);
+        // Conexión real con Gemini 2.5 Flash con memoria conversacional multi-turno
+        rawOutput = await callGeminiApi(query, apiKey, history);
         pkg = parseGeminiResponseToPackage(rawOutput, query);
       } else {
         // Motor determinista local
@@ -176,7 +191,7 @@ export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTPro
         timestamp,
         messages: [
           { sender: 'user', text: query, timestamp },
-          { sender: 'assistant', text: pkg.summaryNote, pkg, timestamp }
+          { sender: 'assistant', text: pkg.summaryNote, rawLlmOutput: rawOutput, pkg, timestamp }
         ]
       };
       saveSessions([newSession, ...sessions]);
@@ -189,7 +204,7 @@ export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTPro
             messages: [
               ...s.messages,
               { sender: 'user' as const, text: query, timestamp },
-              { sender: 'assistant' as const, text: pkg.summaryNote, pkg, timestamp }
+              { sender: 'assistant' as const, text: pkg.summaryNote, rawLlmOutput: rawOutput, pkg, timestamp }
             ]
           };
         }
