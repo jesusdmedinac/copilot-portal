@@ -9,13 +9,15 @@ interface Props {
   description?: string;
   containerClass?: string;
   isAppView?: boolean;
+  hideHeader?: boolean;
 }
 
 const { 
   title = "Copilot Ops | Portal Karla", 
   description = "Base de conocimiento y asistente operativo para postulaciones laborales",
   containerClass = "max-w-5xl px-4 py-8",
-  isAppView = false
+  isAppView = false,
+  hideHeader = isAppView
 } = Astro.props;
 
 const portalPin = import.meta.env.PORTAL_PIN || "2026";
@@ -33,53 +35,53 @@ const portalPin = import.meta.env.PORTAL_PIN || "2026";
   </head>
   <body class={`bg-zinc-950 text-zinc-100 flex flex-col ${isAppView ? 'h-[100dvh] overflow-hidden' : 'min-h-screen'}`}>
     <!-- Header de navegación superior optimizado para Touch & Tablet -->
-    <header class="border-b border-zinc-800/80 bg-zinc-900/80 backdrop-blur sticky top-0 z-40 shrink-0">
-      <div class="max-w-7xl mx-auto px-3 sm:px-4 h-14 flex items-center justify-between">
-        <div class="flex items-center gap-4 sm:gap-6">
-          <a href="/" class="flex items-center gap-2.5 group py-1">
-            <div class="w-8 h-8 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-mono font-bold text-sm group-hover:border-indigo-400 transition-colors">
-              JM
-            </div>
-            <div>
-              <span class="font-semibold text-sm tracking-tight text-zinc-100">Jesús Medina</span>
-              <span class="text-xs text-zinc-400 ml-1 font-mono">/ ops</span>
-            </div>
-          </a>
+    {!hideHeader && (
+      <header class="border-b border-zinc-800/80 bg-zinc-900/80 backdrop-blur sticky top-0 z-40 shrink-0">
+        <div class="max-w-7xl mx-auto px-3 sm:px-4 h-14 flex items-center justify-between">
+          <div class="flex items-center gap-4 sm:gap-6">
+            <a href="/" class="flex items-center gap-2.5 group py-1">
+              <div class="w-8 h-8 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-mono font-bold text-sm group-hover:border-indigo-400 transition-colors">
+                JM
+              </div>
+              <div>
+                <span class="font-semibold text-sm tracking-tight text-zinc-100">Jesús Medina</span>
+                <span class="text-xs text-zinc-400 ml-1 font-mono">/ ops</span>
+              </div>
+            </a>
 
-          <nav class="hidden sm:flex items-center gap-1 font-mono text-xs md:text-sm">
-            <a 
-              href="/" 
-              class="px-3 py-2 rounded-xl text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800/60 transition-colors font-medium min-h-[38px] flex items-center"
-            >
-              Inicio
-            </a>
-            <a 
-              href="/perfil" 
-              class="px-3 py-2 rounded-xl text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800/60 transition-colors font-medium min-h-[38px] flex items-center"
-            >
-              Perfil y Trayectoria
-            </a>
-            <a 
-              href="/guias" 
-              class="px-3 py-2 rounded-xl text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800/60 transition-colors font-medium min-h-[38px] flex items-center"
-            >
-              Guías y Respuestas
-            </a>
-            <a 
-              href="/copilot" 
-              class="px-3.5 py-2 rounded-xl text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 border border-indigo-500/20 transition-colors flex items-center gap-2 font-semibold min-h-[38px]"
-            >
-              <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
-              Copilot Chat
-            </a>
-          </nav>
+            <nav class="hidden sm:flex items-center gap-1 font-mono text-xs md:text-sm">
+              <a 
+                href="/" 
+                class="px-3 py-2 rounded-xl text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800/60 transition-colors font-medium min-h-[38px] flex items-center"
+              >
+                Inicio
+              </a>
+              <a 
+                href="/perfil" 
+                class="px-3 py-2 rounded-xl text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800/60 transition-colors font-medium min-h-[38px] flex items-center"
+              >
+                Perfil y Trayectoria
+              </a>
+              <a 
+                href="/guias" 
+                class="px-3 py-2 rounded-xl text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800/60 transition-colors font-medium min-h-[38px] flex items-center"
+              >
+                Guías y Respuestas
+              </a>
+              <a 
+                href="/copilot" 
+                class="px-3.5 py-2 rounded-xl text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 border border-indigo-500/20 transition-colors flex items-center gap-2 font-semibold min-h-[38px]"
+              >
+                <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+                Copilot Chat
+              </a>
+            </nav>
+          </div>
+
+          <AuthStatus client:load />
         </div>
 
-        <AuthStatus client:load />
-      </div>
-
-      <!-- Barra de navegación móvil/tablet inferior en el header (solo en páginas estándar) -->
-      {!isAppView && (
+        <!-- Barra de navegación móvil/tablet inferior en el header (solo en páginas estándar) -->
         <nav class="sm:hidden flex items-center justify-around border-t border-zinc-800/50 px-2 py-2 font-mono text-xs bg-zinc-900/40">
           <a href="/" class="px-3 py-1.5 text-zinc-400 hover:text-zinc-100 min-h-[36px] flex items-center">Inicio</a>
           <a href="/perfil" class="px-3 py-1.5 text-zinc-400 hover:text-zinc-100 min-h-[36px] flex items-center">Perfil</a>
@@ -89,8 +91,8 @@ const portalPin = import.meta.env.PORTAL_PIN || "2026";
             Copilot
           </a>
         </nav>
-      )}
-    </header>
+      </header>
+    )}
 
     <!-- Contenido principal -->
     <main class={`w-full mx-auto ${isAppView ? 'flex-1 min-h-0 overflow-hidden flex flex-col' : 'flex-1'} ${containerClass}`}>

@@ -457,9 +457,9 @@ export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTPro
       {/* ========================================================= */}
       <main className="flex-1 flex flex-col bg-zinc-950 relative overflow-hidden min-h-0">
         
-        {/* Barra superior de control */}
-        <header className="px-3 sm:px-4 py-2.5 sm:py-3 border-b border-zinc-800/80 flex items-center justify-between shrink-0 bg-zinc-950/80 backdrop-blur-sm z-10">
-          <div className="flex items-center gap-2">
+        {/* Cabecera Única Unificada (Top Bar) */}
+        <header className="px-3 sm:px-4 h-14 border-b border-zinc-800/80 flex items-center justify-between shrink-0 bg-zinc-950/90 backdrop-blur-md z-20">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
               type="button"
@@ -472,6 +472,21 @@ export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTPro
               </svg>
             </button>
 
+            {/* Acceso rápido a Inicio */}
+            <a 
+              href="/" 
+              className="hidden sm:flex items-center gap-2 group py-1 shrink-0" 
+              title="Volver al Inicio del Portal"
+            >
+              <div className="w-8 h-8 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-mono font-bold text-xs group-hover:border-indigo-400 transition-colors">
+                JM
+              </div>
+              <span className="font-semibold text-xs tracking-tight text-zinc-200 hidden md:inline">Jesús Medina</span>
+              <span className="text-[10px] text-zinc-500 font-mono hidden md:inline">/ ops</span>
+            </a>
+
+            <div className="h-4 w-px bg-zinc-800 hidden sm:block shrink-0" />
+
             <button
               onClick={() => {
                 handleNewChat();
@@ -482,21 +497,55 @@ export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTPro
               title="Iniciar nueva postulación"
             >
               <span className="text-indigo-400 font-bold">＋</span>
-              <span className="hidden sm:inline">Nueva</span>
+              <span className="hidden xs:inline">Nueva</span>
             </button>
 
-            <h2 className="text-xs sm:text-sm font-bold text-zinc-200 truncate max-w-[150px] xs:max-w-xs sm:max-w-sm md:max-w-md ml-1">
+            <h2 className="text-xs sm:text-sm font-bold text-zinc-200 truncate max-w-[130px] xs:max-w-[180px] sm:max-w-xs md:max-w-sm ml-1">
               {currentSession ? currentSession.title : 'Nueva Postulación'}
             </h2>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+            {/* Navegación rápida en pantallas medianas y grandes */}
+            <nav className="hidden lg:flex items-center gap-1 text-xs font-mono text-zinc-400 mr-1">
+              <a href="/perfil" className="px-2.5 py-1.5 rounded-lg hover:text-zinc-100 hover:bg-zinc-800/60 transition-colors">
+                Perfil
+              </a>
+              <a href="/guias" className="px-2.5 py-1.5 rounded-lg hover:text-zinc-100 hover:bg-zinc-800/60 transition-colors">
+                Guías
+              </a>
+              <a href="https://notion.so" target="_blank" rel="noopener noreferrer" className="px-2.5 py-1.5 rounded-lg hover:text-indigo-300 hover:bg-zinc-800/60 transition-colors flex items-center gap-1">
+                <span>Notion</span>
+                <span className="text-[10px]">↗</span>
+              </a>
+            </nav>
+
             <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono border ${
               apiKey ? 'bg-indigo-500/10 text-indigo-300 border-indigo-500/20' : 'bg-zinc-800 text-zinc-400 border-zinc-700'
             }`}>
               <span className={`w-1.5 h-1.5 rounded-full ${apiKey ? 'bg-indigo-400 animate-pulse' : 'bg-zinc-500'}`}></span>
-              <span className="hidden xs:inline">{apiKey ? 'Gemini AI Conectado' : 'Motor Local'}</span>
+              <span className="hidden sm:inline">{apiKey ? 'Gemini 2.5' : 'Local'}</span>
             </span>
+
+            <button
+              onClick={() => setShowSettingsModal(true)}
+              type="button"
+              className="w-9 h-9 rounded-xl bg-zinc-800/80 hover:bg-zinc-700 active:scale-95 text-zinc-400 hover:text-zinc-200 border border-zinc-700/60 flex items-center justify-center transition-all cursor-pointer text-xs"
+              title="Ajustes de IA"
+              aria-label="Ajustes de IA"
+            >
+              ⚙️
+            </button>
+
+            <button
+              onClick={handleLock}
+              type="button"
+              className="w-9 h-9 rounded-xl bg-zinc-800/80 hover:bg-zinc-700 active:scale-95 text-zinc-400 hover:text-zinc-200 border border-zinc-700/60 flex items-center justify-center transition-all cursor-pointer text-xs"
+              title="Bloquear portal"
+              aria-label="Bloquear portal"
+            >
+              🔒
+            </button>
           </div>
         </header>
 
