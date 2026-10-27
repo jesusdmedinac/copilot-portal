@@ -23,10 +23,10 @@ export default function CopyButton({ text, label = 'Copiar', className = '' }: C
     <button
       onClick={handleCopy}
       type="button"
-      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all duration-150 active:scale-95 ${
+      className={`inline-flex items-center justify-center gap-2 px-3.5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-mono transition-all duration-150 active:scale-95 min-h-[40px] cursor-pointer ${
         copied
-          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-          : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700/60'
+          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-semibold'
+          : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700/60 font-medium'
       } ${className}`}
     >
       {copied ? (
