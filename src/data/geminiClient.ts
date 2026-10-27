@@ -1,7 +1,5 @@
 import type { ApplicationPackage } from './applicationPackageGenerator';
 
-export const GEMINI_STORAGE_KEY = 'copilot_gemini_api_key';
-
 export interface ChatMessageContext {
   role: 'user' | 'model';
   text: string;

@@ -2,8 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { marked } from 'marked';
 import { analyzeAndGeneratePackage } from '../data/applicationPackageGenerator';
 import type { ApplicationPackage } from '../data/applicationPackageGenerator';
-import { callGeminiApi, parseGeminiResponseToPackage, GEMINI_STORAGE_KEY } from '../data/geminiClient';
-import type { ChatMessageContext } from '../data/geminiClient';
 import { STORAGE_KEY } from './PinGate';
 import ProfileView from './views/ProfileView';
 import GuidesView from './views/GuidesView';
@@ -40,11 +38,10 @@ interface ThreadSession {
 const STORAGE_SESSIONS_KEY = 'karla_chat_sessions_v1';
 
 interface CopilotChatGPTProps {
-  initialApiKey?: string;
   initialTab?: 'copilot' | 'perfil' | 'guias';
 }
 
-export default function CopilotChatGPT({ initialApiKey = '', initialTab = 'copilot' }: CopilotChatGPTProps) {
+export default function CopilotChatGPT({ initialTab = 'copilot' }: CopilotChatGPTProps) {
   const [activeTab, setActiveTab] = useState<'copilot' | 'perfil' | 'guias'>(initialTab);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isNarrowScreen, setIsNarrowScreen] = useState(false);
@@ -52,9 +49,6 @@ export default function CopilotChatGPT({ initialApiKey = '', initialTab = 'copil
   const [currentSessionId, setCurrentSessionId] = useState<string>('new');
   const [input, setInput] = useState('');
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
-  const [apiKey, setApiKey] = useState<string>(initialApiKey);
-  const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
-  const [tempApiKey, setTempApiKey] = useState<string>(initialApiKey);
   const [isThinking, setIsThinking] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -114,25 +108,19 @@ export default function CopilotChatGPT({ initialApiKey = '', initialTab = 'copil
     }
   };
 
-  // Cargar sesiones y API Key desde localStorage o .env
+  // Cargar sesiones y purgar cualquier residuo de clave en localStorage
   useEffect(() => {
     try {
       const savedSessions = localStorage.getItem(STORAGE_SESSIONS_KEY);
       if (savedSessions) {
         setSessions(JSON.parse(savedSessions));
       }
-      const savedKey = localStorage.getItem(GEMINI_STORAGE_KEY);
-      if (savedKey) {
-        setApiKey(savedKey);
-        setTempApiKey(savedKey);
-      } else if (initialApiKey) {
-        setApiKey(initialApiKey);
-        setTempApiKey(initialApiKey);
-      }
+      // Purgar cualquier residuo de API key del almacenamiento local del cliente
+      localStorage.removeItem('copilot_gemini_api_key');
     } catch (e) {
       console.error('Error al inicializar datos:', e);
     }
-  }, [initialApiKey]);
+  }, []);
 
   // Guardar sesiones en localStorage
   const saveSessions = (updated: ThreadSession[]) => {
@@ -142,13 +130,6 @@ export default function CopilotChatGPT({ initialApiKey = '', initialTab = 'copil
     } catch (e) {
       console.error('Error al guardar sesiones:', e);
     }
-  };
-
-  const handleSaveApiKey = () => {
-    const trimmed = tempApiKey.trim();
-    setApiKey(trimmed);
-    localStorage.setItem(GEMINI_STORAGE_KEY, trimmed);
-    setShowSettingsModal(false);
   };
 
   const currentSession = sessions.find(s => s.id === currentSessionId);
@@ -221,17 +202,15 @@ export default function CopilotChatGPT({ initialApiKey = '', initialTab = 'copil
       let packageResolved = false;
 
       // 1. Intentar primero a través de la API del servidor (/api/generate)
-      // Soporta local dev y Cloudflare Pages Functions sin requerir que Karla introduzca manualmente la key
+      // 1. Procesar a través de la API segura del servidor (/api/generate)
       try {
         const response = await fetch('/api/generate', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            ...(apiKey ? { 'x-api-key': apiKey } : {})
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             prompt: query,
-            apiKey: apiKey || undefined,
             history
           })
         });
@@ -248,14 +227,7 @@ export default function CopilotChatGPT({ initialApiKey = '', initialTab = 'copil
         console.warn('Endpoint /api/generate no disponible o falló:', apiErr);
       }
 
-      // 2. Fallback: Conexión directa del cliente con Gemini si hay API key en el navegador
-      if (!packageResolved && apiKey) {
-        rawOutput = await callGeminiApi(query, apiKey, history);
-        pkg = parseGeminiResponseToPackage(rawOutput, query);
-        packageResolved = true;
-      }
-
-      // 3. Fallback: Motor local determinista estructurado
+      // 2. Fallback: Motor local determinista estructurado
       if (!packageResolved) {
         pkg = analyzeAndGeneratePackage(query);
       }
@@ -263,11 +235,11 @@ export default function CopilotChatGPT({ initialApiKey = '', initialTab = 'copil
       console.error('Error generando paquete de postulación:', err);
       pkg = {
         type: 'general',
-        summaryNote: `⚠️ Error al conectar con el motor de IA: ${err.message || err}. Usando motor de respaldo:`,
+        summaryNote: `⚠️ Error al procesar la solicitud. Usando motor de respaldo:`,
         atsAnswers: [{
           question: query,
-          answer: 'Por favor verifica la conexión o la API Key de Gemini en Ajustes.',
-          tag: 'Error API'
+          answer: 'Por favor verifica la conexión a internet o intenta enviar la consulta nuevamente.',
+          tag: 'Conexión'
         }]
       };
     } finally {
@@ -423,21 +395,6 @@ export default function CopilotChatGPT({ initialApiKey = '', initialTab = 'copil
               </div>
               <span className="text-[10px] text-zinc-500">↗</span>
             </a>
-            <button
-              onClick={() => setShowSettingsModal(true)}
-              type="button"
-              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50 transition-colors text-left cursor-pointer min-h-[40px]"
-            >
-              <div className="flex items-center gap-2">
-                <span>⚙️</span>
-                <span>Modelo LLM</span>
-              </div>
-              <span className={`text-[10px] px-2 py-0.5 rounded border font-mono ${
-                apiKey ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-zinc-800 text-zinc-400 border-zinc-700'
-              }`}>
-                {apiKey ? 'Gemini 2.5' : 'Local'}
-              </span>
-            </button>
           </nav>
         </div>
 
@@ -615,29 +572,12 @@ export default function CopilotChatGPT({ initialApiKey = '', initialTab = 'copil
               href="https://notion.so" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono text-zinc-300 hover:text-indigo-300 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono text-zinc-300 hover:text-indigo-300 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 transition-colors"
               title="Abrir Notion en pestaña nueva"
             >
               <span>📋 Notion</span>
               <span className="text-[10px] text-zinc-500">↗</span>
             </a>
-
-            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono border ${
-              apiKey ? 'bg-indigo-500/10 text-indigo-300 border-indigo-500/20' : 'bg-zinc-800 text-zinc-400 border-zinc-700'
-            }`}>
-              <span className={`w-1.5 h-1.5 rounded-full ${apiKey ? 'bg-indigo-400 animate-pulse' : 'bg-zinc-500'}`}></span>
-              <span className="hidden sm:inline">{apiKey ? 'Gemini 2.5' : 'Local'}</span>
-            </span>
-
-            <button
-              onClick={() => setShowSettingsModal(true)}
-              type="button"
-              className="w-9 h-9 rounded-xl bg-zinc-800/80 hover:bg-zinc-700 active:scale-95 text-zinc-400 hover:text-zinc-200 border border-zinc-700/60 flex items-center justify-center transition-all cursor-pointer text-xs"
-              title="Ajustes de IA"
-              aria-label="Ajustes de IA"
-            >
-              ⚙️
-            </button>
 
             <button
               onClick={handleLock}
@@ -1057,7 +997,7 @@ export default function CopilotChatGPT({ initialApiKey = '', initialTab = 'copil
                   </div>
                   <div className="flex items-center gap-2 px-4 py-3 rounded-2xl bg-zinc-900/60 border border-zinc-800 text-xs font-mono text-zinc-400">
                     <span className="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
-                    <span>Analizando con Gemini 2.5 Flash y redactando paquete 4-en-1...</span>
+                    <span>Analizando vacante y estructurando paquete 4-en-1...</span>
                   </div>
                 </div>
               )}
@@ -1133,70 +1073,6 @@ export default function CopilotChatGPT({ initialApiKey = '', initialTab = 'copil
         )}
 
       </main>
-
-      {/* ========================================================= */}
-      {/* MODAL DE CONFIGURACIÓN DE API KEY (GEMINI) */}
-      {/* ========================================================= */}
-      {showSettingsModal && (
-        <div className="fixed inset-0 z-50 bg-zinc-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md p-6 rounded-2xl border border-zinc-800 bg-zinc-900 shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-150">
-            
-            <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
-              <div className="flex items-center gap-2">
-                <span className="text-xl">⚙️</span>
-                <h3 className="font-bold text-sm text-zinc-100">Configuración de Inteligencia Artificial</h3>
-              </div>
-              <button
-                onClick={() => setShowSettingsModal(false)}
-                type="button"
-                className="w-9 h-9 rounded-xl text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 flex items-center justify-center transition-colors cursor-pointer text-sm"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              <p className="text-xs text-zinc-400 leading-relaxed">
-                Conecta **Google Gemini 2.5 Flash** para activar el análisis contextual profundo de vacantes y la redacción del kit de postulación 4-en-1 desde la tablet de Karla.
-              </p>
-
-              <div>
-                <label className="block text-xs font-mono text-zinc-300 mb-1.5">
-                  Gemini API Key (Google AI Studio)
-                </label>
-                <input
-                  type="password"
-                  value={tempApiKey}
-                  onChange={(e) => setTempApiKey(e.target.value)}
-                  placeholder="AIzaSy..."
-                  className="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3.5 py-3 text-base sm:text-xs text-zinc-100 font-mono placeholder-zinc-600 focus:outline-none focus:border-indigo-500"
-                />
-                <p className="text-[11px] text-zinc-500 mt-1.5 leading-relaxed">
-                  La clave se guarda localmente en esta tablet (<code className="text-zinc-400 font-mono">localStorage</code>). El portal en producción ya cuenta con backend integrado por defecto.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-zinc-800/80">
-              <button
-                onClick={() => setShowSettingsModal(false)}
-                type="button"
-                className="px-4 py-2.5 rounded-xl text-xs font-mono text-zinc-400 hover:text-zinc-200 transition-colors min-h-[42px] font-medium cursor-pointer"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleSaveApiKey}
-                type="button"
-                className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-semibold text-xs font-mono transition-all shadow-md shadow-indigo-600/30 min-h-[42px] cursor-pointer"
-              >
-                Guardar y Conectar
-              </button>
-            </div>
-
-          </div>
-        </div>
-      )}
 
     </div>
   );

@@ -1,13 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import CopilotChatGPT from '../components/CopilotChatGPT.tsx';
-
-const geminiApiKey = import.meta.env.GEMINI_API_KEY || "";
 ---
 
 <Layout 
   title="Perfil Técnico y Trayectoria • Copilot Ops" 
   description="Perfil técnico verificado de Jesús Daniel Medina Cruz con copiado rápido en 1 toque"
 >
-  <CopilotChatGPT initialApiKey={geminiApiKey} initialTab="perfil" client:load />
+  <CopilotChatGPT initialTab="perfil" client:load />
 </Layout>

@@ -1,13 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import CopilotChatGPT from '../components/CopilotChatGPT.tsx';
-
-const geminiApiKey = import.meta.env.GEMINI_API_KEY || "";
 ---
 
 <Layout 
   title="Guías de Postulación y Respuestas Oficiales • Copilot Ops" 
   description="Respuestas autorizadas y lineamientos de redacción para formularios de postulación"
 >
-  <CopilotChatGPT initialApiKey={geminiApiKey} initialTab="guias" client:load />
+  <CopilotChatGPT initialTab="guias" client:load />
 </Layout>

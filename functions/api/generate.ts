@@ -8,7 +8,6 @@ interface Env {
 
 interface RequestBody {
   prompt?: string;
-  apiKey?: string;
   pin?: string;
   history?: ChatMessageContext[];
 }
@@ -61,10 +60,7 @@ export const onRequestPost = async (context: { request: Request; env: Env }) => 
       });
     }
 
-    // Resolución de la API Key de Gemini: 1) enviada en el body/header, 2) env de Cloudflare/Vite, 3) fallback local a .env
-    const headerApiKey = request.headers.get('x-api-key') || 
-                         request.headers.get('Authorization')?.replace(/^Bearer\s+/i, '');
-
+    // Resolución de la API Key en el servidor (Cloudflare Pages Secret o .env local)
     let fallbackKey: string | undefined;
     if (typeof process !== 'undefined') {
       fallbackKey = process.env?.GEMINI_API_KEY;
@@ -82,14 +78,14 @@ export const onRequestPost = async (context: { request: Request; env: Env }) => 
       }
     }
 
-    const apiKey = body.apiKey || headerApiKey || env.GEMINI_API_KEY || fallbackKey;
+    const apiKey = env.GEMINI_API_KEY || fallbackKey;
 
     if (!apiKey) {
       return new Response(JSON.stringify({
         success: false,
-        error: 'Falta la API Key de Gemini. Configura GEMINI_API_KEY en Cloudflare o envíala en el body/headers.'
+        error: 'Servicio de IA no disponible temporalmente. Por favor intenta más tarde.'
       }), {
-        status: 400,
+        status: 503,
         headers: corsHeaders
       });
     }
