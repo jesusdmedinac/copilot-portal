@@ -5,6 +5,8 @@ import type { ApplicationPackage } from '../data/applicationPackageGenerator';
 import { callGeminiApi, parseGeminiResponseToPackage, GEMINI_STORAGE_KEY } from '../data/geminiClient';
 import type { ChatMessageContext } from '../data/geminiClient';
 import { STORAGE_KEY } from './PinGate';
+import ProfileView from './views/ProfileView';
+import GuidesView from './views/GuidesView';
 
 // Configurar marked para Markdown con soporte GFM y saltos de línea suaves
 marked.setOptions({
@@ -39,9 +41,11 @@ const STORAGE_SESSIONS_KEY = 'karla_chat_sessions_v1';
 
 interface CopilotChatGPTProps {
   initialApiKey?: string;
+  initialTab?: 'copilot' | 'perfil' | 'guias';
 }
 
-export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTProps) {
+export default function CopilotChatGPT({ initialApiKey = '', initialTab = 'copilot' }: CopilotChatGPTProps) {
+  const [activeTab, setActiveTab] = useState<'copilot' | 'perfil' | 'guias'>(initialTab);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isNarrowScreen, setIsNarrowScreen] = useState(false);
   const [sessions, setSessions] = useState<ThreadSession[]>([]);
@@ -53,6 +57,33 @@ export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTPro
   const [tempApiKey, setTempApiKey] = useState<string>(initialApiKey);
   const [isThinking, setIsThinking] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Sincronización de pestaña activa con URL y detección en carga inicial
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab');
+      if (tabParam === 'perfil' || tabParam === 'guias' || tabParam === 'copilot') {
+        setActiveTab(tabParam);
+      } else if (window.location.pathname.includes('/perfil')) {
+        setActiveTab('perfil');
+      } else if (window.location.pathname.includes('/guias')) {
+        setActiveTab('guias');
+      }
+    }
+  }, []);
+
+  const handleTabChange = (tab: 'copilot' | 'perfil' | 'guias') => {
+    setActiveTab(tab);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('tab', tab);
+      window.history.replaceState({}, '', url.toString());
+    }
+    if (isNarrowScreen) {
+      setSidebarOpen(false);
+    }
+  };
 
   // Detectar ancho de pantalla para comportamiento tablet/móvil
   useEffect(() => {
@@ -333,6 +364,7 @@ export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTPro
           <button
             onClick={() => {
               handleNewChat();
+              setActiveTab('copilot');
               if (isNarrowScreen) setSidebarOpen(false);
             }}
             type="button"
@@ -343,25 +375,47 @@ export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTPro
           </button>
 
           <nav className="pt-2 space-y-1 text-xs font-mono">
-            <a 
-              href="/perfil" 
-              className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 transition-colors min-h-[38px]"
+            <button 
+              onClick={() => handleTabChange('copilot')}
+              type="button"
+              className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all cursor-pointer font-medium min-h-[40px] text-left ${
+                activeTab === 'copilot'
+                  ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30 font-semibold'
+                  : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50'
+              }`}
+            >
+              <span>💬</span>
+              <span>Copilot Chat</span>
+            </button>
+            <button 
+              onClick={() => handleTabChange('perfil')}
+              type="button"
+              className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all cursor-pointer font-medium min-h-[40px] text-left ${
+                activeTab === 'perfil'
+                  ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30 font-semibold'
+                  : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50'
+              }`}
             >
               <span>👤</span>
               <span>Perfil y Trayectoria</span>
-            </a>
-            <a 
-              href="/guias" 
-              className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 transition-colors min-h-[38px]"
+            </button>
+            <button 
+              onClick={() => handleTabChange('guias')}
+              type="button"
+              className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all cursor-pointer font-medium min-h-[40px] text-left ${
+                activeTab === 'guias'
+                  ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30 font-semibold'
+                  : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50'
+              }`}
             >
               <span>📖</span>
               <span>Guías y Respuestas</span>
-            </a>
+            </button>
             <a 
               href="https://notion.so" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="flex items-center justify-between px-3 py-2.5 rounded-lg text-zinc-400 hover:text-indigo-300 hover:bg-zinc-800/50 transition-colors min-h-[38px]"
+              className="flex items-center justify-between px-3 py-2.5 rounded-xl text-zinc-400 hover:text-indigo-300 hover:bg-zinc-800/50 transition-colors min-h-[40px]"
             >
               <div className="flex items-center gap-2">
                 <span>📋</span>
@@ -372,7 +426,7 @@ export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTPro
             <button
               onClick={() => setShowSettingsModal(true)}
               type="button"
-              className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50 transition-colors text-left cursor-pointer min-h-[38px]"
+              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50 transition-colors text-left cursor-pointer min-h-[40px]"
             >
               <div className="flex items-center gap-2">
                 <span>⚙️</span>
@@ -403,10 +457,11 @@ export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTPro
                 key={s.id}
                 onClick={() => {
                   setCurrentSessionId(s.id);
+                  setActiveTab('copilot');
                   if (isNarrowScreen) setSidebarOpen(false);
                 }}
                 className={`group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition-colors cursor-pointer min-h-[44px] ${
-                  currentSessionId === s.id
+                  currentSessionId === s.id && activeTab === 'copilot'
                     ? 'bg-zinc-800 text-zinc-100 border border-zinc-700 shadow-sm'
                     : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
                 }`}
@@ -472,53 +527,100 @@ export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTPro
               </svg>
             </button>
 
-            {/* Acceso rápido a Inicio */}
-            <a 
-              href="/" 
-              className="hidden sm:flex items-center gap-2 group py-1 shrink-0" 
-              title="Volver al Inicio del Portal"
+            {/* Acceso rápido / Logo JM */}
+            <button 
+              onClick={() => handleTabChange('copilot')} 
+              type="button"
+              className="hidden xs:flex items-center gap-2 group py-1 shrink-0 text-left cursor-pointer" 
+              title="Ir al Copilot"
             >
               <div className="w-8 h-8 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-mono font-bold text-xs group-hover:border-indigo-400 transition-colors">
                 JM
               </div>
               <span className="font-semibold text-xs tracking-tight text-zinc-200 hidden md:inline">Jesús Medina</span>
-              <span className="text-[10px] text-zinc-500 font-mono hidden md:inline">/ ops</span>
-            </a>
-
-            <div className="h-4 w-px bg-zinc-800 hidden sm:block shrink-0" />
-
-            <button
-              onClick={() => {
-                handleNewChat();
-                if (isNarrowScreen) setSidebarOpen(false);
-              }}
-              type="button"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono bg-zinc-800 hover:bg-zinc-700 active:scale-95 text-zinc-200 border border-zinc-700 transition-all font-semibold cursor-pointer shrink-0 min-h-[38px]"
-              title="Iniciar nueva postulación"
-            >
-              <span className="text-indigo-400 font-bold">＋</span>
-              <span className="hidden xs:inline">Nueva</span>
             </button>
 
-            <h2 className="text-xs sm:text-sm font-bold text-zinc-200 truncate max-w-[130px] xs:max-w-[180px] sm:max-w-xs md:max-w-sm ml-1">
-              {currentSession ? currentSession.title : 'Nueva Postulación'}
-            </h2>
+            <div className="h-4 w-px bg-zinc-800 hidden xs:block shrink-0" />
+
+            {/* Selector de Vistas SPA (Copilot, Perfil, Guías) */}
+            <div className="flex items-center bg-zinc-900/90 p-1 rounded-xl border border-zinc-800 shrink-0">
+              <button
+                onClick={() => handleTabChange('copilot')}
+                type="button"
+                className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer flex items-center gap-1.5 min-h-[32px] ${
+                  activeTab === 'copilot'
+                    ? 'bg-indigo-600 text-white shadow-sm font-semibold'
+                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/60 font-medium'
+                }`}
+                title="Copilot de Postulaciones"
+              >
+                <span>💬</span>
+                <span className="hidden sm:inline">Copilot</span>
+              </button>
+
+              <button
+                onClick={() => handleTabChange('perfil')}
+                type="button"
+                className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer flex items-center gap-1.5 min-h-[32px] ${
+                  activeTab === 'perfil'
+                    ? 'bg-indigo-600 text-white shadow-sm font-semibold'
+                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/60 font-medium'
+                }`}
+                title="Perfil Técnico y Trayectoria"
+              >
+                <span>👤</span>
+                <span className="hidden sm:inline">Perfil</span>
+              </button>
+
+              <button
+                onClick={() => handleTabChange('guias')}
+                type="button"
+                className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer flex items-center gap-1.5 min-h-[32px] ${
+                  activeTab === 'guias'
+                    ? 'bg-indigo-600 text-white shadow-sm font-semibold'
+                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/60 font-medium'
+                }`}
+                title="Guías de Redacción y Respuestas Oficiales"
+              >
+                <span>📖</span>
+                <span className="hidden sm:inline">Guías</span>
+              </button>
+            </div>
+
+            {/* Controles contextuales cuando está activa la pestaña Copilot */}
+            {activeTab === 'copilot' && (
+              <div className="hidden md:flex items-center gap-2 min-w-0">
+                <button
+                  onClick={() => {
+                    handleNewChat();
+                    if (isNarrowScreen) setSidebarOpen(false);
+                  }}
+                  type="button"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono bg-zinc-800 hover:bg-zinc-700 active:scale-95 text-zinc-200 border border-zinc-700 transition-all font-semibold cursor-pointer shrink-0 min-h-[36px]"
+                  title="Iniciar nueva postulación"
+                >
+                  <span className="text-indigo-400 font-bold">＋</span>
+                  <span>Nueva</span>
+                </button>
+
+                <h2 className="text-xs sm:text-sm font-bold text-zinc-300 truncate max-w-[130px] lg:max-w-[200px] ml-1">
+                  {currentSession ? currentSession.title : 'Nueva Postulación'}
+                </h2>
+              </div>
+            )}
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-            {/* Navegación rápida en pantallas medianas y grandes */}
-            <nav className="hidden lg:flex items-center gap-1 text-xs font-mono text-zinc-400 mr-1">
-              <a href="/perfil" className="px-2.5 py-1.5 rounded-lg hover:text-zinc-100 hover:bg-zinc-800/60 transition-colors">
-                Perfil
-              </a>
-              <a href="/guias" className="px-2.5 py-1.5 rounded-lg hover:text-zinc-100 hover:bg-zinc-800/60 transition-colors">
-                Guías
-              </a>
-              <a href="https://notion.so" target="_blank" rel="noopener noreferrer" className="px-2.5 py-1.5 rounded-lg hover:text-indigo-300 hover:bg-zinc-800/60 transition-colors flex items-center gap-1">
-                <span>Notion</span>
-                <span className="text-[10px]">↗</span>
-              </a>
-            </nav>
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            <a 
+              href="https://notion.so" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono text-zinc-300 hover:text-indigo-300 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 transition-colors"
+              title="Abrir Notion en pestaña nueva"
+            >
+              <span>📋 Notion</span>
+              <span className="text-[10px] text-zinc-500">↗</span>
+            </a>
 
             <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono border ${
               apiKey ? 'bg-indigo-500/10 text-indigo-300 border-indigo-500/20' : 'bg-zinc-800 text-zinc-400 border-zinc-700'
@@ -550,9 +652,10 @@ export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTPro
         </header>
 
         {/* ========================================================= */}
-        {/* ESTADO 1: HERO VACÍO (ESTILO CHATGPT "¿Qué tienes en mente?") */}
+        {/* VISTA 1: COPILOT CHAT (HERO O HILO ACTIVO) */}
         {/* ========================================================= */}
-        {activeMessages.length === 0 ? (
+        {activeTab === 'copilot' && (
+          activeMessages.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 text-center max-w-2xl sm:max-w-3xl mx-auto space-y-6 sm:space-y-8 animate-in fade-in duration-300 overflow-y-auto w-full">
             
             <div className="space-y-2">
@@ -1012,6 +1115,21 @@ export default function CopilotChatGPT({ initialApiKey = '' }: CopilotChatGPTPro
             </footer>
 
           </div>
+        )
+      )}
+
+        {/* ========================================================= */}
+        {/* VISTA 2: PERFIL TÉCNICO Y TRAYECTORIA */}
+        {/* ========================================================= */}
+        {activeTab === 'perfil' && (
+          <ProfileView />
+        )}
+
+        {/* ========================================================= */}
+        {/* VISTA 3: GUÍAS Y RESPUESTAS OFICIALES */}
+        {/* ========================================================= */}
+        {activeTab === 'guias' && (
+          <GuidesView />
         )}
 
       </main>

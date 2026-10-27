@@ -8,8 +8,6 @@ const geminiApiKey = import.meta.env.GEMINI_API_KEY || "";
 <Layout 
   title="Copilot Operativo • Asistente de Postulaciones" 
   description="Asistente interactivo al estilo ChatGPT para Karla: generación de paquetes de postulación y notas para Notion"
-  containerClass="max-w-7xl px-0 sm:px-2 md:px-3 py-0 sm:py-2 md:py-2.5 h-full flex-1 min-h-0"
-  isAppView={true}
 >
-  <CopilotChatGPT initialApiKey={geminiApiKey} client:load />
+  <CopilotChatGPT initialApiKey={geminiApiKey} initialTab="copilot" client:load />
 </Layout>
