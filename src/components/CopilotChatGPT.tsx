@@ -149,18 +149,6 @@ export default function CopilotChatGPT({ initialTab = 'copilot' }: CopilotChatGP
     }
   };
 
-  const handleDownloadTex = (texContent: string, filename: string) => {
-    const blob = new Blob([texContent], { type: 'text/x-tex;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
-
   const handleNewChat = () => {
     setCurrentSessionId('new');
     setInput('');
@@ -219,7 +207,7 @@ export default function CopilotChatGPT({ initialTab = 'copilot' }: CopilotChatGP
           const resJson = await response.json();
           if (resJson.success && resJson.data) {
             pkg = resJson.data;
-            rawOutput = resJson.rawOutput || '';
+            rawOutput = resJson.data.rawLlmOutput || '';
             packageResolved = true;
           }
         }
@@ -751,6 +739,11 @@ export default function CopilotChatGPT({ initialTab = 'copilot' }: CopilotChatGP
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-amber-500/20">
                               <span className="font-mono text-xs sm:text-sm text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
                                 📄 CV Oficial a Adjuntar
+                                {msg.pkg.cvVariant && (
+                                  <span className="ml-1 px-2 py-0.5 rounded-md bg-amber-500/20 border border-amber-500/40 text-[11px]">
+                                    Contacto {msg.pkg.cvVariant}
+                                  </span>
+                                )}
                               </span>
                               {msg.pkg.cvLink && (
                                 <a
@@ -859,44 +852,6 @@ export default function CopilotChatGPT({ initialTab = 'copilot' }: CopilotChatGP
                           </div>
                         )}
 
-                        {/* CASO: CV EN LATEX & COVER LETTER (ATS Package) */}
-                        {msg.pkg.latexCv && (
-                          <div className="p-4 rounded-xl bg-zinc-950 border border-zinc-800 space-y-3">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-zinc-800/80">
-                              <div>
-                                <span className="font-mono text-xs text-indigo-400 font-bold uppercase tracking-wider">
-                                  📜 CV Adaptado en LaTeX (ModernCV)
-                                </span>
-                                <p className="text-[11px] text-zinc-500">Formato vectorial 100% compatible ATS para {msg.pkg.companyName || 'esta vacante'}</p>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <button
-                                  onClick={() => handleCopy(msg.pkg!.latexCv!, `latex-${idx}`)}
-                                  type="button"
-                                  className="px-2.5 py-1 rounded-lg text-xs font-mono bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 transition-all cursor-pointer font-semibold"
-                                >
-                                  {copiedKey === `latex-${idx}` ? '✓ Copiado' : '📋 Copiar .tex'}
-                                </button>
-                                <button
-                                  onClick={() => handleDownloadTex(msg.pkg!.latexCv!, `cv-jesus-medina-${(msg.pkg!.companyName || 'tailored').toLowerCase()}.tex`)}
-                                  type="button"
-                                  className="px-2.5 py-1 rounded-lg text-xs font-mono bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/40 transition-all cursor-pointer font-semibold"
-                                >
-                                  ⬇ Descargar .tex
-                                </button>
-                              </div>
-                            </div>
-
-                            <details className="text-xs font-mono text-zinc-400 bg-zinc-900/50 rounded-lg p-2.5 border border-zinc-800/60 cursor-pointer">
-                              <summary className="font-semibold text-zinc-300 hover:text-indigo-400 transition-colors">
-                                Ver código LaTeX generado
-                              </summary>
-                              <pre className="mt-2 p-2 bg-zinc-950 rounded text-[11px] text-zinc-300 overflow-x-auto max-h-48 leading-relaxed">
-{msg.pkg.latexCv}
-                              </pre>
-                            </details>
-                          </div>
-                        )}
 
                         {/* CASO: COVER LETTER */}
                         {msg.pkg.coverLetter && (
@@ -913,7 +868,20 @@ export default function CopilotChatGPT({ initialTab = 'copilot' }: CopilotChatGP
                                 {copiedKey === `cover-${idx}` ? '✓ Copiado' : '📋 Copiar Carta'}
                               </button>
                             </div>
-                            <div 
+                            {msg.pkg.evidenceSelection && (
+                              <p className="text-[11px] sm:text-xs font-mono text-zinc-400 leading-relaxed">
+                                🎯 {msg.pkg.evidenceSelection}
+                              </p>
+                            )}
+                            {msg.pkg.validationWarnings && msg.pkg.validationWarnings.length > 0 && (
+                              <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/40 text-amber-300 text-xs space-y-1">
+                                <p className="font-bold">⚠️ Revisa antes de enviar:</p>
+                                {msg.pkg.validationWarnings.map((w, i) => (
+                                  <p key={i}>• {w}</p>
+                                ))}
+                              </div>
+                            )}
+                            <div
                               className="copilot-markdown text-xs sm:text-sm text-zinc-200 leading-relaxed bg-zinc-900/50 p-3.5 sm:p-4 rounded-xl border border-zinc-800/60 font-sans"
                               dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.pkg.coverLetter) }}
                             />

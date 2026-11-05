@@ -1,5 +1,6 @@
-import { generateTailoredLatexCv } from './latexCvTemplate';
 import guides from './guides.json';
+import { ARCHETYPES, archetypeUrl, detectContactVariant } from './canon';
+import type { ContactVariant } from './canon';
 
 export interface ApplicationPackage {
   type: 'linkedin-email' | 'ats-package' | 'qa-answer' | 'general';
@@ -8,12 +9,14 @@ export interface ApplicationPackage {
   contactEmail?: string;
   cvRecommendation?: string;
   cvLink?: string;
+  cvVariant?: ContactVariant;
   emailSubject?: string;
   emailDraft?: string;
   linkedinNote?: string;
   commentDraft?: string;
   coverLetter?: string;
-  latexCv?: string;
+  evidenceSelection?: string;
+  validationWarnings?: string[];
   atsAnswers?: { question: string; answer: string; tag: string }[];
   notionSyncSnippet?: string;
   summaryNote: string;
@@ -47,17 +50,19 @@ export function analyzeAndGeneratePackage(input: string): ApplicationPackage {
   else if (lower.includes('android')) role = 'Senior Android Engineer';
   else if (lower.includes('multiplatform') || lower.includes('kmp')) role = 'Senior Kotlin Multiplatform Engineer';
 
-  // Determinar arquetipo canónico adecuado
-  let cvRecommendation = 'Arquetipo 1: Android Platform & Core Architecture | URL: https://cv-ats-eyd.pages.dev/cv-android-platform/ | Motivo: Enfoque nativo en Android SDK, Compose y arquitectura de plataforma.';
-  let cvLink = 'https://cv-ats-eyd.pages.dev/cv-android-platform/';
-
+  // Determinar arquetipo canónico y variante de contacto (MX/US)
+  let archetype = ARCHETYPES[0];
   if (lower.includes('multiplatform') || lower.includes('kmp') || lower.includes('cross-platform') || lower.includes('cross platform')) {
-    cvRecommendation = 'Arquetipo 2: Kotlin Multiplatform (KMP) Architect | URL: https://cv-ats-eyd.pages.dev/cv-kmp-architect/ | Motivo: Enfoque en código compartido multiplataforma Android/iOS con KMP y Kotlin Coroutines.';
-    cvLink = 'https://cv-ats-eyd.pages.dev/cv-kmp-architect/';
+    archetype = ARCHETYPES[1];
   } else if (lower.includes('founding') || lower.includes('early stage') || lower.includes('startup') || lower.includes('0 to 1') || lower.includes('0-1') || lower.includes('react native')) {
-    cvRecommendation = 'Arquetipo 3: Founding Mobile & Product Engineer | URL: https://cv-ats-eyd.pages.dev/cv-founding-mobile/ | Motivo: Enfoque de producto 0-a-1, agilidad y desarrollo end-to-end (Android, KMP, React Native).';
-    cvLink = 'https://cv-ats-eyd.pages.dev/cv-founding-mobile/';
+    archetype = ARCHETYPES[2];
   }
+  const cvVariant = detectContactVariant(text);
+  const cvLink = archetypeUrl(archetype, cvVariant);
+  const cvRecommendation = `Arquetipo ${archetype.number}: ${archetype.title} | Variante: ${cvVariant} | URL: ${cvLink} | Motivo: ${archetype.scope}`;
+  const closingLine = cvVariant === 'US'
+    ? 'Authorized to work in the US (TN Visa status). Resume attached—let me know if you have time for a brief sync this week.'
+    : 'Based in Tijuana, B.C. Resume attached—let me know if you have time for a brief sync this week.';
 
   const linkedinNote = `Hi, saw your note for ${role} at ${company}. With 10 yrs in mobile platform at Wells Fargo & KMP, I would love to connect! Best, Jesús`.slice(0, 195);
 
@@ -69,7 +74,7 @@ export function analyzeAndGeneratePackage(input: string): ApplicationPackage {
 
 Saw your note regarding the ${role} opening at ${company}.
 Currently Senior UI Engineer at Wells Fargo (Client Platform), I specialize in scaling high-performance Android systems, Jetpack Compose, modular architecture, and CI/CD pipelines.
-Authorized to work in the US (TN Visa status). Resume attached—let me know if you have time for a brief sync this week.
+${closingLine}
 
 Best,
 Jesús Daniel Medina Cruz`;
@@ -84,24 +89,20 @@ Jesús Daniel Medina Cruz`;
       linkedinNote,
       cvRecommendation,
       cvLink,
+      cvVariant,
       summaryNote: `Detecté un post de LinkedIn con email de contacto (${email}). Se generó el paquete completo de postulación (CV canónico, email directo en 3 pasos, nota de LinkedIn < 200 caracteres).`
     };
   }
 
   // CASO 2: Job Description de ATS (Greenhouse, Lever, etc.)
   if (text.length > 150 || lower.includes('requirements') || lower.includes('responsibilities') || lower.includes('qualifications') || lower.includes('requisitos')) {
-    const latexCv = generateTailoredLatexCv({
-      companyName: company,
-      roleTitle: role
-    });
-
     const coverLetter = `Dear Hiring Team at ${company},
 
-I am writing to express my interest in the ${role} position. As a Senior UI Engineer at Wells Fargo (Client Platform), I bring 10 years of mobile engineering experience architecting modular Android systems, Jetpack Compose UI, and cross-platform infrastructure with Kotlin Multiplatform (KMP).
+The ${role} role matches what I do: 10 years of mobile engineering across modular Android systems, Jetpack Compose UI, and Kotlin Multiplatform (KMP). I am currently Senior UI Engineer at Wells Fargo (Client Platform).
 
-At Wells Fargo, I lead client platform initiatives that consolidate core architecture, optimize CI/CD pipelines, and reduce defect density by 30% through disciplined TDD and Clean Architecture. My background directly bridges low-level mobile performance with high-velocity developer experience.
+At Wells Fargo I architected a centralized, testable navigation system that consolidated 10+ fragmented entry points, and I lead the migration from XML layouts to Jetpack Compose under Clean Architecture and MVVM.
 
-Authorized to work in the US under TN Visa status, I have attached my resume and look forward to discussing how my platform expertise can contribute to ${company}.
+${cvVariant === 'US' ? 'I am authorized to work in the US under TN Visa status. ' : ''}My resume is attached; I would welcome a short call to discuss how I can contribute to ${company}.
 
 Sincerely,
 Jesús Daniel Medina Cruz`;
@@ -129,7 +130,7 @@ Jesús Daniel Medina Cruz`;
 
 I am applying for the ${role} position at ${company}.
 Currently Senior UI Engineer at Wells Fargo (Client Platform), I specialize in scaling modular Android systems, Jetpack Compose, and CI/CD pipelines.
-Authorized to work in the US (TN Visa status). Resume attached—let me know if you have time for a brief sync this week.
+${closingLine}
 
 Best,
 Jesús Daniel Medina Cruz`;
@@ -140,13 +141,13 @@ Jesús Daniel Medina Cruz`;
       roleTitle: role,
       cvRecommendation,
       cvLink,
+      cvVariant,
       emailSubject,
       emailDraft,
       linkedinNote,
       coverLetter,
-      latexCv,
-      atsAnswers,
-      summaryNote: `Detecté un Job Description para ${company} (${role}). Se generó el paquete 4-en-1: CV Canónico recomendado, Correo de postulación, Nota de LinkedIn (< 200 chars) y Cover Letter sobrio de 3 párrafos.`
+      atsAnswers: cvVariant === 'US' ? atsAnswers : atsAnswers.filter(a => a.tag !== 'Visa TN'),
+      summaryNote: `Detecté un Job Description para ${company} (${role}). Se generó el paquete 4-en-1: CV Canónico recomendado (variante ${cvVariant}), Correo de postulación, Nota de LinkedIn (< 200 chars) y Cover Letter sobrio de 3 párrafos.`
     };
   }
 
