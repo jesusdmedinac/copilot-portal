@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { APP_VERSION } from '../data/canon';
 
 export const STORAGE_KEY = 'ops_portal_pin_unlocked';
 
@@ -133,7 +134,7 @@ export default function PinGate({ pin }: PinGateProps) {
         </div>
 
         <div className="text-[10px] font-mono text-zinc-500">
-          Coordinación Confidencial • JobSearch
+          Coordinación Confidencial • JobSearch • v{APP_VERSION}
         </div>
       </div>
     </div>

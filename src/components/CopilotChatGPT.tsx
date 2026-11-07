@@ -3,6 +3,7 @@ import { marked } from 'marked';
 import { analyzeAndGeneratePackage } from '../data/applicationPackageGenerator';
 import type { ApplicationPackage } from '../data/applicationPackageGenerator';
 import { STORAGE_KEY } from './PinGate';
+import { APP_VERSION } from '../data/canon';
 import ProfileView from './views/ProfileView';
 import GuidesView from './views/GuidesView';
 
@@ -304,7 +305,12 @@ export default function CopilotChatGPT({ initialTab = 'copilot' }: CopilotChatGP
             <div className="w-8 h-8 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-bold text-xs font-mono">
               AI
             </div>
-            <span className="font-bold text-sm tracking-tight text-zinc-100">Copilot Karla</span>
+            <div className="flex items-center gap-1.5">
+              <span className="font-bold text-sm tracking-tight text-zinc-100">Copilot Karla</span>
+              <span className="px-1.5 py-0.5 rounded-md bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 font-mono text-[10px] font-semibold">
+                v{APP_VERSION}
+              </span>
+            </div>
           </div>
 
           <button
@@ -556,6 +562,10 @@ export default function CopilotChatGPT({ initialTab = 'copilot' }: CopilotChatGP
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            <span className="inline-flex items-center px-2 py-1 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 font-mono text-xs font-semibold" title={`Versión ${APP_VERSION}`}>
+              v{APP_VERSION}
+            </span>
+
             <a 
               href="https://notion.so" 
               target="_blank" 
