@@ -1,5 +1,5 @@
 import guides from './guides.json';
-import { ARCHETYPES, archetypeUrl, detectContactVariant } from './canon';
+import { ARCHETYPES, archetypeUrl, detectContactVariant, detectIntent } from './canon.ts';
 import type { ContactVariant } from './canon';
 
 export interface ApplicationPackage {
@@ -25,6 +25,48 @@ export interface ApplicationPackage {
 export function analyzeAndGeneratePackage(input: string): ApplicationPackage {
   const text = input.trim();
   const lower = text.toLowerCase();
+  const intent = detectIntent(text);
+
+  // CASO 0: Pregunta de formulario ATS, entrevista o consulta técnica
+  if (intent === 'question') {
+    const matchedGuide = guides.formAnswers.find(a => 
+      lower.includes(a.id) || 
+      lower.includes(a.title.toLowerCase()) || 
+      a.tags.some(t => lower.includes(t.toLowerCase())) ||
+      lower.includes(a.promptEn.toLowerCase()) ||
+      lower.includes(a.promptEs.toLowerCase())
+    );
+
+    if (matchedGuide) {
+      return {
+        type: 'qa-answer',
+        summaryNote: `Respuesta oficial verificada para "${matchedGuide.title}":`,
+        atsAnswers: [{
+          question: matchedGuide.title,
+          answer: matchedGuide.answer,
+          tag: matchedGuide.tags[0] || 'Vetted'
+        }]
+      };
+    }
+
+    const customAnswer = `With 10 years of mobile software engineering experience at Wells Fargo and high-trust client environments, my approach emphasizes robust client platform architecture, strict testing practices (TDD), and Kotlin Multiplatform to deliver resilient mobile products at scale.`;
+    
+    const notionSnippet = `### 💡 Nueva Pregunta de Formulario:
+* **Pregunta:** "${text}"
+* **Respuesta Sugerida:** "${customAnswer}"
+* **Contexto:** Agregada durante la sesión de Karla para revisión de Jesús.`;
+
+    return {
+      type: 'qa-answer',
+      summaryNote: `He analizado la pregunta. Aquí tienes una propuesta de respuesta en el perfil y estilo de Jesús:`,
+      atsAnswers: [{
+        question: text,
+        answer: customAnswer,
+        tag: 'Propuesta ATS'
+      }],
+      notionSyncSnippet: notionSnippet
+    };
+  }
 
   // 1. Detectar si contiene un email o patrón de post de LinkedIn
   const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/;

@@ -138,6 +138,69 @@ export function detectContactVariant(text: string): ContactVariant {
   return count(US_SIGNALS) > count(MX_SIGNALS) ? 'US' : 'MX';
 }
 
+// Clasificación de intención: distingue entre preguntas/consultas, refinamientos y vacantes completas
+export type UserIntent = 'posting' | 'question' | 'refinement';
+
+const QUESTION_SIGNALS = [
+  '?', '¿',
+  'por qué', 'por que', 'cómo responder', 'que responder', 'qué responder',
+  'cómo contestar', 'que contestar', 'qué contestar', 'me preguntan',
+  'pregunta:', 'pregunta de', 'formulario pregunta', 'qué ponemos', 'que ponemos',
+  'qué respondemos', 'que respondemos', 'cuéntanos', 'cuentanos', 'describe',
+  'cuál es tu', 'cual es tu', 'cuáles son tus', 'cuales son tus', 'experiencia con',
+  'why us', 'why do you', 'why are you', 'tell us about', 'describe a time',
+  'describe your', 'what is your', 'what are your', 'how do you', 'how would you',
+  'do you require', 'are you authorized', 'what excited you', 'what experience do you have',
+  'share an example', 'salary expectations', 'expected salary'
+];
+
+const POSTING_SIGNALS = [
+  'requirements', 'responsibilities', 'qualifications', 'requisitos', 'responsabilidades',
+  'about the role', 'about the job', 'years of experience', 'bachelor', 'we are looking for',
+  'join our team', 'full-time', 'full time', 'part-time', 'hiring for', 'apply now',
+  'job description', 'perfil del puesto', 'funciones:', 'beneficios:'
+];
+
+export function detectIntent(text: string): UserIntent {
+  const trimmed = (text || '').trim();
+  const lower = trimmed.toLowerCase();
+
+  // 1. Refinamientos: comandos cortos que piden modificar la respuesta previa
+  if (trimmed.length < 120) {
+    if (
+      lower.startsWith('hazlo') ||
+      lower.startsWith('acórtalo') || lower.startsWith('acortalo') ||
+      lower.startsWith('hazla') ||
+      lower.startsWith('más corto') || lower.startsWith('mas corto') ||
+      lower.startsWith('más breve') || lower.startsWith('mas breve') ||
+      lower.startsWith('enfócate') || lower.startsWith('enfocate') ||
+      lower.startsWith('ponlo en') ||
+      lower.startsWith('traduce') ||
+      lower.startsWith('cambia') ||
+      lower.includes('otra opción') || lower.includes('otra opcion') ||
+      lower.includes('otra alternativa')
+    ) {
+      return 'refinement';
+    }
+  }
+
+  // 2. Preguntas de formulario o dudas operativas
+  const hasQuestionMark = trimmed.includes('?') || trimmed.includes('¿');
+  const questionHits = QUESTION_SIGNALS.filter(q => lower.includes(q)).length;
+  const postingHits = POSTING_SIGNALS.filter(p => lower.includes(p)).length;
+
+  if (hasQuestionMark || questionHits > 0) {
+    // Si contiene estructura formal de job posting con múltiples señales y longitud sustancial, es un posting
+    if (postingHits >= 2 && trimmed.length > 300) {
+      return 'posting';
+    }
+    return 'question';
+  }
+
+  // 3. Por defecto, tratar como vacante / publicación de empleo
+  return 'posting';
+}
+
 export interface ValidatablePackage {
   coverLetter?: string;
   emailDraft?: string;
@@ -150,12 +213,14 @@ export interface ValidationContext {
   // Canonical CV routes (3 archetypes x MX/US); any other link is a one-off CV
   canonicalCvUrls?: string[];
   expectedVariant?: ContactVariant;
+  intent?: UserIntent;
 }
 
 export function validatePackage(pkg: ValidatablePackage, domain: EvidenceDomain | null, ctx: ValidationContext = {}): string[] {
   const violations: string[] = [];
   const fields = [pkg.coverLetter, pkg.emailDraft, pkg.linkedinNote, pkg.commentDraft].filter(Boolean) as string[];
 
+  // 1. Reglas globales inviolables (aplican siempre)
   if (fields.some(f => /hansell/i.test(f))) {
     violations.push('Se mencionó HansellApp, que está prohibido.');
   }
@@ -164,49 +229,55 @@ export function validatePackage(pkg: ValidatablePackage, domain: EvidenceDomain 
     violations.push('Se atribuyó "Web" a Zora Community; solo tiene targets Android/iOS/Desktop.');
   }
 
-  if (ctx.canonicalCvUrls) {
-    if (!pkg.cvLink) {
-      violations.push('Falta el link al CV canónico.');
-    } else if (!ctx.canonicalCvUrls.includes(pkg.cvLink)) {
-      violations.push(`El link de CV (${pkg.cvLink}) no es uno de los 3 arquetipos canónicos.`);
-    }
-  }
-
-  if (ctx.expectedVariant && pkg.cvLink) {
-    const linkVariant: ContactVariant = /-us\/?$/.test(pkg.cvLink) ? 'US' : 'MX';
-    if (linkVariant !== ctx.expectedVariant) {
-      violations.push(`La vacante pide la variante ${ctx.expectedVariant} del CV, pero el link es de la variante ${linkVariant}.`);
-    }
-  }
-
-  if (ctx.expectedVariant === 'MX' && fields.some(f => /\bTN\b/.test(f))) {
-    violations.push('Rol de México/LATAM: no menciones la visa TN.');
-  }
-
   for (const phrase of BANNED_PHRASES) {
     if (fields.some(f => f.toLowerCase().includes(phrase.toLowerCase()))) {
       violations.push(`Se usó la frase prohibida: "${phrase}".`);
     }
   }
 
-  if (pkg.linkedinNote && pkg.linkedinNote.length >= LINKEDIN_NOTE_MAX_CHARS) {
-    violations.push(`La nota de LinkedIn tiene ${pkg.linkedinNote.length} caracteres (debe ser menor a ${LINKEDIN_NOTE_MAX_CHARS}).`);
-  }
-
-  if (pkg.coverLetter && domain) {
-    const citesPrimary = domain.primary.some(name => countMatches(pkg.coverLetter!, name) > 0);
-    if (!citesPrimary) {
-      violations.push(`La cover letter no cita la evidencia principal para ${domain.label} (esperado: ${domain.primary.join(' o ')}).`);
+  // 2. Reglas del Kit 4-en-1 (SOLO aplican si la intención es postulación, no en preguntas de formulario)
+  if (ctx.intent !== 'question') {
+    if (ctx.canonicalCvUrls) {
+      if (!pkg.cvLink) {
+        violations.push('Falta el link al CV canónico.');
+      } else if (!ctx.canonicalCvUrls.includes(pkg.cvLink)) {
+        violations.push(`El link de CV (${pkg.cvLink}) no es uno de los 3 arquetipos canónicos.`);
+      }
     }
-    if (!domain.allowsWellsFargoFocus && countMatches(pkg.coverLetter, 'Wells Fargo') > 1) {
-      violations.push(`La cover letter centra el argumento en Wells Fargo; para ${domain.label} solo debe aparecer una vez como rol actual.`);
+
+    if (ctx.expectedVariant && pkg.cvLink) {
+      const linkVariant: ContactVariant = /-us\/?$/.test(pkg.cvLink) ? 'US' : 'MX';
+      if (linkVariant !== ctx.expectedVariant) {
+        violations.push(`La vacante pide la variante ${ctx.expectedVariant} del CV, pero el link es de la variante ${linkVariant}.`);
+      }
+    }
+
+    if (ctx.expectedVariant === 'MX' && fields.some(f => /\bTN\b/.test(f))) {
+      violations.push('Rol de México/LATAM: no menciones la visa TN.');
+    }
+
+    if (pkg.linkedinNote && pkg.linkedinNote.length >= LINKEDIN_NOTE_MAX_CHARS) {
+      violations.push(`La nota de LinkedIn tiene ${pkg.linkedinNote.length} caracteres (debe ser menor a ${LINKEDIN_NOTE_MAX_CHARS}).`);
+    }
+
+    if (pkg.coverLetter && domain) {
+      const citesPrimary = domain.primary.some(name => countMatches(pkg.coverLetter!, name) > 0);
+      if (!citesPrimary) {
+        violations.push(`La cover letter no cita la evidencia principal para ${domain.label} (esperado: ${domain.primary.join(' o ')}).`);
+      }
+      if (!domain.allowsWellsFargoFocus && countMatches(pkg.coverLetter, 'Wells Fargo') > 1) {
+        violations.push(`La cover letter centra el argumento en Wells Fargo; para ${domain.label} solo debe aparecer una vez como rol actual.`);
+      }
     }
   }
 
   return violations;
 }
 
-export function buildCorrectionPrompt(violations: string[], domain: EvidenceDomain | null): string {
+export function buildCorrectionPrompt(violations: string[], domain: EvidenceDomain | null, intent: UserIntent = 'posting'): string {
+  if (intent === 'question') {
+    return `Tu respuesta anterior violó estas reglas:\n${violations.map(v => `- ${v}`).join('\n')}\nRegenera tu respuesta corrigiendo únicamente estos puntos sin generar el kit de postulación (CV, correo ni carta).`;
+  }
   const routing = domain
     ? `\nDominio detectado: ${domain.label}. Evidencia principal obligatoria: ${domain.primary.join(', ')}.`
     : '';

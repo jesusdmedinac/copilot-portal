@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { detectDomain, detectContactVariant, validatePackage } from './guardrails.ts';
+import { detectDomain, detectContactVariant, detectIntent, validatePackage } from './guardrails.ts';
+import { parseGeminiResponseToPackage } from './geminiClient.ts';
 
 const CANON = [
   'https://cv-ats-eyd.pages.dev/cv-android-platform/',
@@ -92,4 +93,57 @@ test('detecta health tech en vacantes en español y frases de relleno', () => {
     coverLetter: 'I am writing to express my interest in the role. My resume is attached for your review.'
   }, null);
   assert.equal(violations.length, 2);
+});
+
+test('clasificación de intención (detectIntent): preguntas, vacantes y refinamientos', () => {
+  // Preguntas de formulario y dudas
+  assert.equal(detectIntent('¿Por qué quieres trabajar aquí?'), 'question');
+  assert.equal(detectIntent('Me preguntan en el formulario de Lever si tengo experiencia con KMP'), 'question');
+  assert.equal(detectIntent('Why us / What excites you about this role?'), 'question');
+  assert.equal(detectIntent('Describe your experience scaling Android architecture'), 'question');
+  assert.equal(detectIntent('¿Cuál es el empleo actual de Jesús?'), 'question');
+  assert.equal(detectIntent('Qué respondemos si preguntan si requiere visa?'), 'question');
+
+  // Refinamientos
+  assert.equal(detectIntent('Hazlo más breve'), 'refinement');
+  assert.equal(detectIntent('Acórtalo a un párrafo'), 'refinement');
+  assert.equal(detectIntent('Enfócate en Insulet'), 'refinement');
+  assert.equal(detectIntent('Ponlo en inglés'), 'refinement');
+
+  // Vacantes completas
+  assert.equal(detectIntent(HEALTH_POST), 'posting');
+  assert.equal(detectIntent(FINTECH_POST), 'posting');
+  assert.equal(detectIntent(STARTUP_POST), 'posting');
+});
+
+test('modo pregunta: validatePackage no exige CV canónico ni Cover Letter', () => {
+  // Una respuesta directa a una pregunta sin cvLink ni coverLetter es 100% válida en modo pregunta
+  const violations = validatePackage({
+    emailDraft: undefined,
+    coverLetter: undefined,
+    cvLink: undefined
+  }, null, { intent: 'question', canonicalCvUrls: CANON });
+  assert.deepEqual(violations, []);
+
+  // Pero aún aplica las reglas globales de prohibición (HansellApp, frases prohibidas)
+  const invalidViolations = validatePackage({
+    coverLetter: 'At HansellApp I built the UI. I hope this email finds you well.'
+  }, null, { intent: 'question' });
+  assert.ok(invalidViolations.some(v => v.includes('HansellApp')));
+  assert.ok(invalidViolations.some(v => v.includes('I hope this email finds you well')));
+});
+
+test('parseGeminiResponseToPackage extrae [RESPUESTA_FORMULARIO] como qa-answer sin generar kit', () => {
+  const llmText = `Aquí tienes una opción directa para el formulario:
+[RESPUESTA_FORMULARIO]
+With 10 years of mobile platform experience, I focus on Kotlin Multiplatform to share 100% of business logic between Android and iOS. At Wells Fargo and Insulet, this reduced duplicate regressions and accelerated team velocity.
+[/RESPUESTA_FORMULARIO]
+`;
+  const pkg = parseGeminiResponseToPackage(llmText, 'Describe your experience with KMP');
+  assert.equal(pkg.type, 'qa-answer');
+  assert.equal(pkg.atsAnswers?.length, 1);
+  assert.ok(pkg.atsAnswers![0].answer.includes('With 10 years of mobile platform experience'));
+  assert.equal(pkg.cvLink, undefined);
+  assert.equal(pkg.coverLetter, undefined);
+  assert.equal(pkg.emailDraft, undefined);
 });

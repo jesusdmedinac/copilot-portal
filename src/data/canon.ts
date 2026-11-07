@@ -1,12 +1,12 @@
 // Canonical facts synced from cv-ats and JobSearch (see scripts/sync-sources.mjs).
 // Everything the copilot says about CVs, contact data and verified facts comes from here.
-import sources from './sources.generated.json';
-import pkg from '../../package.json';
+import sources from './sources.generated.json' with { type: 'json' };
+import pkg from '../../package.json' with { type: 'json' };
 
 export const APP_VERSION: string = pkg.version;
 
-import type { ContactVariant } from './guardrails';
-export type { ContactVariant };
+import type { ContactVariant, UserIntent } from './guardrails.ts';
+export type { ContactVariant, UserIntent };
 
 export interface Archetype {
   slug: string;
@@ -32,7 +32,7 @@ export function archetypeUrl(archetype: Archetype, variant: ContactVariant): str
 
 export const CANONICAL_CV_URLS: string[] = ARCHETYPES.flatMap(a => [a.urlMx, a.urlUs]);
 
-export { detectContactVariant } from './guardrails';
+export { detectContactVariant, detectIntent } from './guardrails.ts';
 
 // Resolves the archetype and variant named in a free-text recommendation.
 export function resolveCv(text: string): { archetype: Archetype; variant: ContactVariant; url: string } | null {

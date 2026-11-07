@@ -1,6 +1,6 @@
 import { buildSystemPrompt, parseGeminiResponseToPackage } from '../../src/data/geminiClient';
 import type { ChatMessageContext } from '../../src/data/geminiClient';
-import { detectDomain, detectContactVariant, validatePackage, buildCorrectionPrompt } from '../../src/data/guardrails';
+import { detectDomain, detectContactVariant, detectIntent, validatePackage, buildCorrectionPrompt } from '../../src/data/guardrails';
 import { CANONICAL_CV_URLS } from '../../src/data/canon';
 
 interface Env {
@@ -92,19 +92,22 @@ export const onRequestPost = async (context: { request: Request; env: Env }) => 
       });
     }
 
-    // 1. Detectar dominio de la vacante y construir System Prompt Canónico
+    // 1. Detectar intención y contexto de la vacante / pregunta
+    const intent = detectIntent(prompt);
     const priorUserTexts = (body.history || [])
       .filter(item => item.role !== 'model')
       .map(item => item.text)
       .reverse();
-    // Solo los mensajes cortos (refinamientos) heredan el dominio de la vacante anterior
-    const isRefinement = prompt.length < 200;
+    // Solo los mensajes cortos de refinamiento heredan el dominio de la vacante anterior
+    const isRefinement = intent === 'refinement';
     const domain = detectDomain(isRefinement ? [prompt, ...priorUserTexts] : [prompt]);
     // La variante MX/US se decide con la vacante original, no con el refinamiento
     const postingText = isRefinement ? (priorUserTexts.find(t => t.length >= 200) || prompt) : prompt;
     const variant = detectContactVariant(postingText);
-    const validationCtx = { canonicalCvUrls: CANONICAL_CV_URLS, expectedVariant: variant };
-    const systemPrompt = buildSystemPrompt(domain, variant);
+    const validationCtx = intent === 'question'
+      ? { intent }
+      : { canonicalCvUrls: CANONICAL_CV_URLS, expectedVariant: variant, intent };
+    const systemPrompt = buildSystemPrompt(domain, variant, intent);
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
     // 2. Sanitizar historial
@@ -191,12 +194,12 @@ export const onRequestPost = async (context: { request: Request; env: Env }) => 
       const retry = await callGemini([
         ...contents,
         { role: 'model', parts: [{ text: outputText }] },
-        { role: 'user', parts: [{ text: buildCorrectionPrompt(violations, domain) }] }
+        { role: 'user', parts: [{ text: buildCorrectionPrompt(violations, domain, intent) }] }
       ]);
       if (retry.text) {
         const retryPkg = parseGeminiResponseToPackage(retry.text, prompt);
         const retryViolations = validatePackage(retryPkg, domain, validationCtx);
-        if (retryViolations.length <= violations.length) {
+        if (retryViolations.length < violations.length) {
           outputText = retry.text;
           pkg = retryPkg;
           violations = retryViolations;
@@ -210,7 +213,8 @@ export const onRequestPost = async (context: { request: Request; env: Env }) => 
         type: pkg.type,
         cvRecommendation: pkg.cvRecommendation || null,
         cvLink: pkg.cvLink || null,
-        cvVariant: pkg.cvVariant || variant,
+        cvVariant: pkg.cvVariant || (intent === 'question' ? null : variant),
+        atsAnswers: pkg.atsAnswers || null,
         emailSubject: pkg.emailSubject || null,
         emailDraft: pkg.emailDraft || null,
         linkedinNote: pkg.linkedinNote || null,
