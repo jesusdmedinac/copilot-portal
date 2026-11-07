@@ -4,16 +4,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "sync": "node scripts/sync-sources.mjs",
+    "predev": "npm run sync",
     "dev": "astro dev",
-    "dev:api": "astro build && wrangler pages dev dist",
+    "dev:api": "npm run build && wrangler pages dev dist",
+    "prebuild": "npm run sync",
     "build": "astro build",
     "preview": "astro preview",
+    "test": "node --test src/data/*.test.ts",
     "astro": "astro",
-    "deploy": "astro build && npx wrangler pages deploy dist --project-name copilot-portal"
+    "deploy": "npm run build && npx wrangler pages deploy dist --project-name copilot-portal"
   },
   "dependencies": {
     "@astrojs/react": "5.0.7",
-    "@vanabel/texlyre-busytex": "0.1.4-beta",
     "astro": "^6.4.8",
     "marked": "^18.1.2",
     "react": "^19.0.0",
