@@ -86,7 +86,7 @@ export function generateCopilotAnswer(query: string): ChatMessage {
     return {
       id,
       sender: 'assistant',
-      text: 'Jesús no se posiciona como programador Swift exclusivo, sino como **Especialista en Kotlin Multiplatform (KMP)**. Explica que comparte el 100% de la lógica de negocio, arquitectura, datos y networking entre Android e iOS, colaborando directamente con ingenieros de iOS mediante SKIE y APIs nativas en Swift.',
+      text: 'Jesús no se posiciona como programador Swift exclusivo, sino como **Especialista en Kotlin Multiplatform (KMP)**. Explica que comparte lógica de negocio, arquitectura, datos y networking entre Android e iOS, colaborando directamente con ingenieros de iOS mediante SKIE y APIs nativas en Swift.',
       copySnippet: guide?.answer,
       links: [{ label: 'Ver Sección en Guías: Experiencia en iOS', url: '/guias#ios-cross-platform' }],
       category: 'Cross-Platform',
@@ -140,7 +140,7 @@ export function generateCopilotAnswer(query: string): ChatMessage {
     return {
       id,
       sender: 'assistant',
-      text: 'Los proyectos técnicos reales y verificados de Jesús para citar son:\n1. **json-to-compose:** Motor de Server-Driven UI en Compose Multiplatform.\n2. **Zora Community:** App automotriz de referencia en Kotlin Toolchain + SQLDelight.\n3. **KMP CLI:** Suite de diagnóstico y arquitectura multiplataforma.\n4. **Academia Desde0:** Plataforma educativa con más de 2,000 alumnos.',
+      text: 'Los proyectos técnicos reales y verificados de Jesús para citar son:\n1. **json-to-compose:** Motor de Server-Driven UI en Compose Multiplatform (Android, iOS, Desktop y Web/WASM).\n2. **Zora Community:** App de referencia en Kotlin Toolchain + SQLDelight (Android, iOS y Desktop).\n3. **KMP CLI:** Suite de diagnóstico, servidor MCP y arquitectura multiplataforma.\n4. **Academia Desde0:** Cursos en vivo con ~30 desarrolladores formados.',
       copySnippet: 'json-to-compose: https://github.com/jesusdmedinac/json-to-compose\nZora Community: https://github.com/jesusdmedinac/zora-community',
       links: [{ label: 'Ver Perfil: Proyectos de Código Abierto', url: '/perfil#proyectos' }],
       category: 'Proyectos',

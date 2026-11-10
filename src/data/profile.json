@@ -6,7 +6,7 @@
     "email": "jesus.daniel.medina.cruz@gmail.com",
     "phone": "+14704061747",
     "url": "https://jesusdmedinac.com",
-    "summary": "Senior Mobile Engineer with 11 years of experience architecting highly scalable cross-platform systems. Specialized in Kotlin Multiplatform (KMP) to maximize code sharing across Android, iOS, desktop, web, and server environments without sacrificing native performance. Proven track record of leading migrations, modernizing legacy systems, and establishing robust CI/CD pipelines to accelerate delivery cycles in fast-paced startup and enterprise environments.",
+    "summary": "Senior Mobile Engineer with 11 years of experience architecting scalable Android and cross-platform systems. Specialized in Kotlin Multiplatform (KMP) to maximize code sharing across Android, iOS, and Desktop environments without sacrificing native performance. Proven track record of leading migrations, modernizing legacy systems, and establishing robust CI/CD pipelines to accelerate delivery cycles in fast-paced startup and enterprise environments.",
     "theme": "default",
     "location": {
       "address": "",
@@ -254,7 +254,7 @@
       "institution": "Universidad Tecnológica de Tijuana",
       "url": "https://uttijuana.edu.mx/",
       "area": "Técnico Superior Universitario, Tecnologías de la Información y Comunicación",
-      "studyType": "Associate",
+      "studyType": "TSU",
       "startDate": "2015-06",
       "endDate": "2017-06"
     }
