@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { marked } from 'marked';
 import { analyzeAndGeneratePackage } from '../data/applicationPackageGenerator';
 import type { ApplicationPackage } from '../data/applicationPackageGenerator';
-import { STORAGE_KEY } from './PinGate';
+import { STORAGE_KEY, PIN_KEY, lockPortal } from './PinGate';
 import { APP_VERSION } from '../data/canon';
 import ProfileView from './views/ProfileView';
 import GuidesView from './views/GuidesView';
@@ -196,13 +196,21 @@ export default function CopilotChatGPT({ initialTab = 'copilot' }: CopilotChatGP
         const response = await fetch('/api/generate', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'x-portal-pin': localStorage.getItem(PIN_KEY) || ''
           },
           body: JSON.stringify({
             prompt: query,
             history
           })
         });
+
+        // PIN vencido o cambiado: se bloquea el portal en vez de usar el motor de respaldo
+        if (response.status === 401) {
+          lockPortal();
+          setIsThinking(false);
+          return;
+        }
 
         if (response.ok) {
           const resJson = await response.json();
@@ -270,8 +278,7 @@ export default function CopilotChatGPT({ initialTab = 'copilot' }: CopilotChatGP
   };
 
   const handleLock = () => {
-    localStorage.removeItem(STORAGE_KEY);
-    window.dispatchEvent(new Event('lock-portal'));
+    lockPortal();
   };
 
   return (

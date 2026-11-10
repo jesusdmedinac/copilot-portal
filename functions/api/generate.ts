@@ -2,6 +2,7 @@ import { buildSystemPrompt, parseGeminiResponseToPackage } from '../../src/data/
 import type { ChatMessageContext } from '../../src/data/geminiClient';
 import { detectDomain, detectContactVariant, detectIntent, validatePackage, buildCorrectionPrompt } from '../../src/data/guardrails';
 import { CANONICAL_CV_URLS } from '../../src/data/canon';
+import { checkPin, pinFailure } from '../../src/data/pinAuth';
 
 interface Env {
   GEMINI_API_KEY?: string;
@@ -37,6 +38,19 @@ export const onRequestPost = async (context: { request: Request; env: Env }) => 
 
   try {
     const body: RequestBody = await request.json();
+
+    // El PIN es obligatorio y se valida antes de cualquier otra cosa
+    const pinError = pinFailure(checkPin(env.PORTAL_PIN, request.headers.get('x-portal-pin') || body.pin));
+    if (pinError) {
+      return new Response(JSON.stringify({
+        success: false,
+        error: pinError.error
+      }), {
+        status: pinError.status,
+        headers: corsHeaders
+      });
+    }
+
     const prompt = body.prompt?.trim();
 
     if (!prompt) {
@@ -45,19 +59,6 @@ export const onRequestPost = async (context: { request: Request; env: Env }) => 
         error: 'El campo "prompt" es obligatorio.'
       }), {
         status: 400,
-        headers: corsHeaders
-      });
-    }
-
-    // Validación opcional de PIN si está configurado en el entorno
-    const expectedPin = env.PORTAL_PIN;
-    const providedPin = body.pin || request.headers.get('x-portal-pin');
-    if (expectedPin && providedPin && providedPin !== expectedPin) {
-      return new Response(JSON.stringify({
-        success: false,
-        error: 'PIN de acceso no válido.'
-      }), {
-        status: 401,
         headers: corsHeaders
       });
     }

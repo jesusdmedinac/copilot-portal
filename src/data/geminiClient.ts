@@ -90,7 +90,7 @@ ${BANNED_PHRASES.map(p => `     * "${p}"`).join('\n')}
    Nunca generes, adaptes ni propongas un CV por empresa. La personalización va solo en la cover letter y el correo.
 ${buildArchetypeList()}
 6. EXPERIENCIA TÉCNICA CLAVE:
-   - Kotlin Multiplatform (KMP), compartiendo 100% de la lógica de negocio, arquitectura, datos y networking entre Android e iOS.
+   - Kotlin Multiplatform (KMP), compartiendo lógica de negocio, arquitectura, datos y networking entre Android e iOS.
    - Android nativo (Jetpack Compose, Clean Architecture, MVI).
    - iOS nativo & interop moderno (Swift, SKIE, SPM).
    - React Native & TypeScript para ejecución rápida de MVPs y prototipos de alto rendimiento.
@@ -141,7 +141,7 @@ DEBES GENERAR OBLIGATORIAMENTE LOS SIGUIENTES 4 ELEMENTOS:
    REGLA ESTRICTA DE LONGITUD: MENOR A ${LINKEDIN_NOTE_MAX_CHARS} CARACTERES (< ${LINKEDIN_NOTE_MAX_CHARS} caracteres en total). Debe ser ultra directo y profesional.
    Cita la evidencia principal del dominio, no por defecto Wells Fargo.
    Delimitador obligatorio:
-   [LINKEDIN_NOTE]Hi [Name], saw your post for [Role] at [Company]. 10 yrs in mobile, incl. [evidencia principal del dominio]. Would love to connect! Best, Jesús[/LINKEDIN_NOTE]
+   [LINKEDIN_NOTE]Hi [Name], saw your post for [Role] at [Company]. 11 yrs in mobile, incl. [evidencia principal del dominio]. Would love to connect! Best, Jesús[/LINKEDIN_NOTE]
 
 4. COVER LETTER PERSONALIZADA (SIGUIENDO LINEAMIENTOS DE JOBSEARCH):
    ANTES de redactarla, decide la evidencia según la MATRIZ DE RUTEO y emítela:

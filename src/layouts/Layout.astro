@@ -18,7 +18,6 @@ const {
   hideHeader = true
 } = Astro.props;
 
-const portalPin = import.meta.env.PORTAL_PIN || "2026";
 ---
 
 <!doctype html>
@@ -37,7 +36,7 @@ const portalPin = import.meta.env.PORTAL_PIN || "2026";
       <slot />
     </main>
 
-    <!-- Barrera de Protección por PIN (Isla React con configuración desde .env) -->
-    <PinGate pin={portalPin} client:load />
+    <!-- Barrera de Protección por PIN (Isla React; el PIN se valida en el servidor) -->
+    <PinGate client:load />
   </body>
 </html>

@@ -2,61 +2,84 @@ import React, { useState, useEffect } from 'react';
 import { APP_VERSION } from '../data/canon';
 
 export const STORAGE_KEY = 'ops_portal_pin_unlocked';
+// El PIN que el servidor aceptó; viaja en cada llamada a /api/generate
+export const PIN_KEY = 'ops_portal_pin';
 
-interface PinGateProps {
-  pin?: string;
+const MIN_PIN_LENGTH = 4;
+const MAX_PIN_LENGTH = 8;
+
+export function lockPortal() {
+  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(PIN_KEY);
+  window.dispatchEvent(new Event('lock-portal'));
 }
 
-export default function PinGate({ pin }: PinGateProps) {
+export default function PinGate() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [enteredPin, setEnteredPin] = useState('');
-  const [error, setError] = useState(false);
-
-  // PIN inyectado desde Layout.astro vía .env (PORTAL_PIN)
-  const targetPin = (pin || '2026').toString().trim();
-  const targetLength = targetPin.length || 4;
+  const [error, setError] = useState<string | null>(null);
+  const [isChecking, setIsChecking] = useState(false);
 
   useEffect(() => {
     const checkAuth = () => {
-      const isUnlocked = localStorage.getItem(STORAGE_KEY) === 'true';
+      // Sesiones anteriores sin PIN guardado deben volver a ingresarlo
+      const isUnlocked = localStorage.getItem(STORAGE_KEY) === 'true' && !!localStorage.getItem(PIN_KEY);
       setIsAuthenticated(isUnlocked);
+    };
+    const onLock = () => {
+      setEnteredPin('');
+      setIsAuthenticated(false);
     };
 
     checkAuth();
     window.addEventListener('storage', checkAuth);
-    window.addEventListener('lock-portal', () => setIsAuthenticated(false));
+    window.addEventListener('lock-portal', onLock);
 
     return () => {
       window.removeEventListener('storage', checkAuth);
-      window.removeEventListener('lock-portal', () => setIsAuthenticated(false));
+      window.removeEventListener('lock-portal', onLock);
     };
   }, []);
 
   const handleDigit = (digit: string) => {
-    if (enteredPin.length < targetLength) {
-      const next = enteredPin + digit;
-      setEnteredPin(next);
-      setError(false);
-
-      if (next.length === targetLength) {
-        if (next === targetPin) {
-          localStorage.setItem(STORAGE_KEY, 'true');
-          setIsAuthenticated(true);
-          window.dispatchEvent(new Event('auth-changed'));
-        } else {
-          setError(true);
-          setTimeout(() => {
-            setEnteredPin('');
-            setError(false);
-          }, 800);
-        }
-      }
-    }
+    if (isChecking) return;
+    setEnteredPin(prev => (prev.length >= MAX_PIN_LENGTH ? prev : prev + digit));
+    setError(null);
   };
 
   const handleDelete = () => {
+    if (isChecking) return;
     setEnteredPin(prev => prev.slice(0, -1));
-    setError(false);
+    setError(null);
+  };
+
+  // El servidor es el único que conoce el PIN
+  const handleSubmit = async () => {
+    if (isChecking || enteredPin.length < MIN_PIN_LENGTH) return;
+    setIsChecking(true);
+    try {
+      const response = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-portal-pin': enteredPin },
+        body: '{}'
+      });
+      if (response.ok) {
+        localStorage.setItem(PIN_KEY, enteredPin);
+        localStorage.setItem(STORAGE_KEY, 'true');
+        setEnteredPin('');
+        setIsAuthenticated(true);
+        window.dispatchEvent(new Event('auth-changed'));
+      } else if (response.status === 401) {
+        setError('PIN incorrecto. Intenta de nuevo.');
+        setEnteredPin('');
+      } else {
+        setError('El servidor no pudo validar el PIN. Avísale a Jesús.');
+      }
+    } catch (_) {
+      setError('Sin conexión con el servidor. Intenta de nuevo.');
+    } finally {
+      setIsChecking(false);
+    }
   };
 
   if (isAuthenticated === null || isAuthenticated === true) {
@@ -75,12 +98,12 @@ export default function PinGate({ pin }: PinGateProps) {
           Portal Privado de Operaciones
         </h2>
         <p className="text-xs text-zinc-400 mt-1 mb-6 leading-relaxed">
-          Ingresa el PIN de seguridad de {targetLength} dígitos configurado para acceder al portal de Karla.
+          Ingresa el PIN de seguridad y toca Entrar para acceder al portal de Karla.
         </p>
 
         {/* Indicadores de PIN dinámicos según targetLength */}
         <div className="flex items-center justify-center gap-3 mb-6">
-          {Array.from({ length: targetLength }).map((_, idx) => {
+          {Array.from({ length: Math.max(MIN_PIN_LENGTH, enteredPin.length) }).map((_, idx) => {
             const filled = enteredPin.length > idx;
             return (
               <div
@@ -99,7 +122,7 @@ export default function PinGate({ pin }: PinGateProps) {
 
         {error && (
           <p className="text-xs font-mono text-rose-400 mb-4 animate-bounce">
-            PIN incorrecto. Intenta de nuevo.
+            {error}
           </p>
         )}
 
@@ -115,7 +138,15 @@ export default function PinGate({ pin }: PinGateProps) {
               {num}
             </button>
           ))}
-          <div />
+          <button
+            onClick={handleSubmit}
+            type="button"
+            disabled={isChecking || enteredPin.length < MIN_PIN_LENGTH}
+            className="h-12 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed text-white font-mono font-bold text-xs border border-indigo-500/60 transition-all flex items-center justify-center cursor-pointer"
+            aria-label="Entrar"
+          >
+            {isChecking ? '…' : 'Entrar'}
+          </button>
           <button
             onClick={() => handleDigit('0')}
             type="button"

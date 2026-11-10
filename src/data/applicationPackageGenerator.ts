@@ -106,7 +106,7 @@ export function analyzeAndGeneratePackage(input: string): ApplicationPackage {
     ? 'Authorized to work in the US (TN Visa status). Resume attached—let me know if you have time for a brief sync this week.'
     : 'Based in Tijuana, B.C. Resume attached—let me know if you have time for a brief sync this week.';
 
-  const linkedinNote = `Hi, saw your note for ${role} at ${company}. With 10 yrs in mobile platform at Wells Fargo & KMP, I would love to connect! Best, Jesús`.slice(0, 195);
+  const linkedinNote = `Hi, saw your note for ${role} at ${company}. With 11 yrs in mobile platform at Wells Fargo & KMP, I would love to connect! Best, Jesús`.slice(0, 195);
 
   // CASO 1: Post de LinkedIn con Email de Contacto
   if (isLinkedInPost && emailMatch) {

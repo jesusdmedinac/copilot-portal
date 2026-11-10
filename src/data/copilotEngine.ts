@@ -154,7 +154,7 @@ export function generateCopilotAnswer(query: string): ChatMessage {
     return {
       id,
       sender: 'assistant',
-      text: 'Para enviar mensaje en LinkedIn tras postular, mantén el mensaje en menos de 5 líneas, mencionando 10 años en Android/KMP, Wells Fargo, residencia en San Leandro, CA y enlace directo a su web.',
+      text: 'Para enviar mensaje en LinkedIn tras postular, mantén el mensaje en menos de 5 líneas, mencionando 11 años en Android/KMP, Wells Fargo, residencia en San Leandro, CA y enlace directo a su web.',
       copySnippet: template?.text,
       links: [{ label: 'Ver Sección en Guías: Plantillas de Outreach', url: '/guias#outreach' }],
       category: 'Outreach',

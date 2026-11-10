@@ -55,6 +55,9 @@ function pagesFunctionsDev() {
             webResponse = req.method === 'OPTIONS' 
               ? await mod.onRequestOptions() 
               : await mod.onRequestGet();
+          } else if (req.url.startsWith('/api/auth')) {
+            const mod = await server.ssrLoadModule('/functions/api/auth.ts');
+            webResponse = await mod.onRequestPost({ request: webRequest, env });
           } else if (req.url.startsWith('/api/generate')) {
             const mod = await server.ssrLoadModule('/functions/api/generate.ts');
             webResponse = req.method === 'OPTIONS'
