@@ -42,7 +42,7 @@ export default function ProfileView() {
                 {profile.basics.name}
               </h1>
               <span className="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                10 Años Exp.
+                11 Años Exp.
               </span>
               <span className="px-2.5 py-1 rounded-lg text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 Visa TN (USMCA)
@@ -228,7 +228,7 @@ export default function ProfileView() {
               <span className="text-xs font-mono text-emerald-400">EdTech</span>
             </div>
             <p className="text-xs text-zinc-400 leading-relaxed">
-              Plataforma de mentoría y educación técnica móvil fundada por Jesús para capacitar a más de 20 ingenieros en Kotlin Multiplatform, testing automatizado (TDD) y arquitectura Clean.
+              Plataforma de mentoría y educación técnica móvil fundada por Jesús para capacitar a ~30 desarrolladores en Android, Kotlin Multiplatform, testing automatizado (TDD) y arquitectura Clean.
             </p>
             <div className="pt-2 flex items-center justify-between">
               <a 

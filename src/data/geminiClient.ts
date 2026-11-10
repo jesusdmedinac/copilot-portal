@@ -81,10 +81,10 @@ ${BANNED_PHRASES.map(p => `     * "${p}"`).join('\n')}
    - Estructura del correo en 3 pasos:
      1) Motivo inmediato (ej: "Saw your note regarding the [Role] at [Company].")
      2) Experiencia concreta del dominio de la vacante según la MATRIZ DE RUTEO (ej. health tech: "At Insulet I built the VIEW app, real-time remote diabetes monitoring for caregivers."; fintech: "Currently Senior UI Engineer at Wells Fargo (Client Platform), modernizing navigation for tens of millions of users.")
-     3) Call to Action rápido según la variante (US: "Authorized to work in the US (TN Visa status). Resume attached—let me know if you have time for a brief sync this week." | MX: "Based in Tijuana, B.C. Resume attached—let me know if you have time for a brief sync this week.")
+     3) Call to Action rápido según la variante (US: "Authorized to work in the US (TN Visa status). Resume attached. Let me know if you have time for a brief sync this week." | MX: "Based in Tijuana, B.C. Resume attached. Let me know if you have time for a brief sync this week.")
 4. VARIANTE DE CONTACTO (MISMO CV, DISTINTO BLOQUE DE CONTACTO):
    - US: roles en EE. UU. (presencial, híbrido o US Remote). Contacto: ${CONTACT.us.city}, ${CONTACT.us.region}, ${CONTACT.us.phone}. Autorizado a trabajar en EE. UU.: YES. Requiere patrocinio: YES (Visa TN, T-MEC/USMCA; trámite de 2 a 3 semanas con carta oferta, sin lotería). No preguntes por trabajo remoto desde México.
-   - MX: roles en México, LATAM o remotos desde México. Contacto: ${CONTACT.mx.city}, ${CONTACT.mx.region}, ${CONTACT.mx.phone}. No menciones la visa TN.
+   - MX: roles en México, LATAM o remotos desde México. Contacto: ${CONTACT.mx.city}, ${CONTACT.mx.region}, ${CONTACT.mx.phone}. Tarifa objetivo: $35–$55 USD/h ($5,600–$8,800 USD/mes tiempo completo; facturación W-8BEN desde México). No menciones la visa TN.
    - Si no hay señales claras de ubicación, usa MX.
 5. LOS 3 ARQUETIPOS CANÓNICOS DE CV (ÚNICOS CVs PERMITIDOS, PUBLICADOS EN cv-ats-eyd.pages.dev):
    Nunca generes, adaptes ni propongas un CV por empresa. La personalización va solo en la cover letter y el correo.
