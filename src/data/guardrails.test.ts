@@ -136,13 +136,13 @@ test('modo pregunta: validatePackage no exige CV canónico ni Cover Letter', () 
 test('parseGeminiResponseToPackage extrae [RESPUESTA_FORMULARIO] como qa-answer sin generar kit', () => {
   const llmText = `Aquí tienes una opción directa para el formulario:
 [RESPUESTA_FORMULARIO]
-With 11 years of mobile platform experience, I focus on Kotlin Multiplatform to share 100% of business logic between Android and iOS. At Wells Fargo and Insulet, this reduced duplicate regressions and accelerated team velocity.
+With 10 years of mobile platform experience, I focus on Kotlin Multiplatform to share 100% of business logic between Android and iOS. At Wells Fargo and Insulet, this reduced duplicate regressions and accelerated team velocity.
 [/RESPUESTA_FORMULARIO]
 `;
   const pkg = parseGeminiResponseToPackage(llmText, 'Describe your experience with KMP');
   assert.equal(pkg.type, 'qa-answer');
   assert.equal(pkg.atsAnswers?.length, 1);
-  assert.ok(pkg.atsAnswers![0].answer.includes('With 11 years of mobile platform experience'));
+  assert.ok(pkg.atsAnswers![0].answer.includes('With 10 years of mobile platform experience'));
   assert.equal(pkg.cvLink, undefined);
   assert.equal(pkg.coverLetter, undefined);
   assert.equal(pkg.emailDraft, undefined);

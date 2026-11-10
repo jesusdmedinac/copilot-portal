@@ -65,7 +65,7 @@ export const COPILOT_CATEGORIES = [
     id: 'leadership',
     label: 'Liderazgo y TDD',
     query: '¿Cómo responder sobre liderazgo técnico y mentoría?',
-    badge: 'Senior'
+    badge: 'Staff'
   },
   {
     id: 'mission',
@@ -127,7 +127,7 @@ export function generateCopilotAnswer(query: string): ChatMessage {
     return {
       id,
       sender: 'assistant',
-      text: 'Para la pregunta "¿Por qué quieres trabajar aquí?", usa la plantilla oficial para Senior Mobile Engineer, enfatizando sus 11 años en Android SDK, Kotlin Multiplatform y aceleración de desarrolladores.',
+      text: 'Para la pregunta "¿Por qué quieres trabajar aquí?", usa la plantilla oficial para Staff Mobile Engineer, enfatizando sus 10 años en Android SDK, Kotlin Multiplatform y aceleración de desarrolladores.',
       copySnippet: guide?.answer,
       links: [{ label: 'Ver Sección en Guías: Why Us', url: '/guias#why-us' }],
       category: 'Formularios ATS',
@@ -154,7 +154,7 @@ export function generateCopilotAnswer(query: string): ChatMessage {
     return {
       id,
       sender: 'assistant',
-      text: 'Para enviar mensaje en LinkedIn tras postular, mantén el mensaje en menos de 5 líneas, mencionando 11 años en Android/KMP, Wells Fargo, residencia en San Leandro, CA y enlace directo a su web.',
+      text: 'Para enviar mensaje en LinkedIn tras postular, mantén el mensaje en menos de 5 líneas, mencionando 10 años en Android/KMP, Wells Fargo, residencia en San Leandro, CA y enlace directo a su web.',
       copySnippet: template?.text,
       links: [{ label: 'Ver Sección en Guías: Plantillas de Outreach', url: '/guias#outreach' }],
       category: 'Outreach',

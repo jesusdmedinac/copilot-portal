@@ -6,7 +6,7 @@
     "email": "jesus.daniel.medina.cruz@gmail.com",
     "phone": "+14704061747",
     "url": "https://jesusdmedinac.com",
-    "summary": "Senior Mobile Engineer with 11 years of experience architecting highly scalable cross-platform systems. Specialized in Kotlin Multiplatform (KMP) to maximize code sharing across Android, iOS, desktop, web, and server environments without sacrificing native performance. Proven track record of leading migrations, modernizing legacy systems, and establishing robust CI/CD pipelines to accelerate delivery cycles in fast-paced startup and enterprise environments.",
+    "summary": "Senior Mobile Engineer with 10 years of experience architecting highly scalable cross-platform systems. Specialized in Kotlin Multiplatform (KMP) to maximize code sharing across Android, iOS, desktop, web, and server environments without sacrificing native performance. Proven track record of leading migrations, modernizing legacy systems, and establishing robust CI/CD pipelines to accelerate delivery cycles in fast-paced startup and enterprise environments.",
     "theme": "default",
     "location": {
       "address": "",
@@ -66,7 +66,7 @@
     },
     {
       "name": "Academia Desde0",
-      "position": "Founder & Lead Instructor",
+      "position": "Senior Mobile Developer & Instructor",
       "location_type": "Remote",
       "location": "Remote",
       "startDate": "2024-02",
@@ -75,8 +75,8 @@
       "summary": "Directed curriculum development at a training platform founded to democratize access to high-quality tech education for Spanish-speaking communities.",
       "highlights": [
         "Upskilled developers in modern mobile architecture by designing and delivering a curriculum focused on KMP and modern architectural patterns.",
-        "Improved code quality and team collaboration by establishing pair programming, structured code reviews, and agile feedback cycles.",
-        "Runs a catalog of in-person and live online courses for non-programmers and experienced professionals; student-born projects include Bubble, Zora, Gobus, and Maxiser."
+        "Decreased bug density in student projects through the implementation of project-based learning and Test-Driven Development (TDD).",
+        "Improved code quality and team collaboration by establishing pair programming, structured code reviews, and agile feedback cycles."
       ],
       "skills": [
         "Mobile Development",
@@ -86,97 +86,32 @@
       ]
     },
     {
+      "name": "Bubble",
+      "position": "Mobile Software Consultant (KMP Focus)",
       "location_type": "Remote",
       "location": "Remote",
-      "url": "https://beek.io",
-      "summary": "Series A audio content startup backed by Greylock & Accel (5M+ downloads); entire original audio content catalog acquired by Spotify. Hired to move the React Native app to fully native Android and iOS.",
-      "skills": [
-        "Kotlin Multiplatform",
-        "Jetpack Compose",
-        "SwiftUI",
-        "CircleCI & Fastlane",
-        "Ruby on Rails"
-      ],
-      "name": "Beek.io",
-      "position": "Mobile Software Engineer",
-      "startDate": "2022-12",
-      "endDate": "2023-09",
-      "highlights": [
-        "Owned the native Android and iOS apps end to end during the migration from React Native to fully native clients.",
-        "Built a complete audio player in Kotlin Multiplatform with native Jetpack Compose and SwiftUI interfaces, covering background playback, offline-first synchronization, and lock-screen controls.",
-        "Architected multiplatform shared libraries using Kotlin Multiplatform, eliminating code duplication between Android and iOS for network layer, models, and analytics.",
-        "Spearheaded Android codebase modernization, migrating legacy monolithic architectures into modular Kotlin packages and reducing technical debt by 31%.",
-        "Introduced CI/CD from scratch with CircleCI and Fastlane, replacing manual releases with automated debug and release builds and internal testing distribution on Google Play and the App Store.",
-        "Engineered smooth in-app purchasing (IAP) funnels and audio catalog discovery, increasing subscription conversion and playback session length.",
-        "Modified REST and GraphQL endpoints in Ruby on Rails to unblock mobile features.",
-        "Maintained 99.9% crash-free sessions across high-frequency audio streaming and dynamic catalog search."
-      ]
-    },
-    {
-      "location_type": "Remote",
-      "location": "Remote",
-      "url": "",
-      "summary": "",
-      "skills": [
-        "Kotlin Multiplatform",
-        "CleverTap SDK",
-        "Android",
-        "Fintech"
-      ],
-      "name": "Bitso",
-      "position": "Android Engineer",
-      "startDate": "2021-12",
-      "endDate": "2022-05",
-      "highlights": [
-        "Owned the integration of the CleverTap user engagement SDK through Kotlin Multiplatform, sharing a single implementation across the Android and iOS apps."
-      ]
-    },
-    {
-      "location_type": "On site",
-      "location": "On site",
-      "url": "",
-      "summary": "Early-stage startup building a short-video social app with crypto features.",
-      "skills": [
-        "Kotlin",
-        "Android SDK",
-        "AWS Serverless",
-        "Amazon S3",
-        "Zero-to-One MVP"
-      ],
-      "name": "Vlokr (early-stage startup)",
-      "position": "Founding Engineer",
-      "startDate": "2021-06",
-      "endDate": "2021-12",
-      "highlights": [
-        "Joined as the first engineering hire, working directly with the CTO; selected the full technology stack and planned, designed, and built the Android app in native Kotlin.",
-        "Built the serverless AWS backend, with S3 video uploads and an AWS-managed database.",
-        "Delivered a working MVP with video playback, thumbnails, comments, and likes."
-      ]
-    },
-    {
-      "location_type": "Remote",
-      "location": "Remote",
-      "url": "",
-      "summary": "Mobile SDKs behind Dexcom's continuous glucose monitoring (CGM) apps.",
-      "skills": [
-        "JUnit 4 & 5",
-        "Kotlin",
-        "Java",
-        "SDK Testing",
-        "MedTech"
-      ],
-      "name": "Dexcom",
-      "position": "Senior Software Engineer, Mobile",
       "startDate": "2021-03",
-      "endDate": "2021-06",
+      "endDate": "2024-02",
+      "summary": "Provided hands-on engineering and strategic guidance across multiple companies (Bitso, Dexcom), focusing on scalable and maintainable codebases for Android and iOS.",
+      "url": "https://bubble.jesusdmedinac.com",
       "highlights": [
-        "Wrote unit and integration tests with JUnit 4 and JUnit 5 for the Kotlin and Java SDKs used by the G6 and G7 CGM mobile apps.",
-        "Championed robust testing practices and SDK development for high-trust health apps."
+        "Increased development velocity by leading a codebase modernization initiative, migrating legacy implementations to modular, shared Kotlin packages.",
+        "Bitso (Fintech): Owned cross-platform integration of user engagement SDKs using Kotlin Multiplatform across Android and iOS.",
+        "Dexcom (Medical): Championed robust testing practices and SDK development for high-trust health apps, maintaining 99.94% crash-free sessions.",
+        "Increased user engagement by integrating AI-driven personalization and dynamic user experiences via Firebase Remote Config."
+      ],
+      "skills": [
+        "Android",
+        "iOS",
+        "Kotlin Multiplatform",
+        "Firebase",
+        "CI/CD",
+        "Kotlin"
       ]
     },
     {
       "name": "Insulet Corporation",
-      "position": "Mobile Engineer",
+      "position": "Senior Mobile Engineer",
       "location_type": "On site",
       "location": "Tijuana, Baja California, Mexico",
       "startDate": "2019-11",
@@ -184,39 +119,36 @@
       "summary": "Spearheaded the development of the VIEW app, an innovative mobile solution empowering caregivers to remotely monitor the health of individuals living with diabetes.",
       "url": "",
       "highlights": [
-        "Migrated the VIEW codebase from Java to Kotlin and introduced the app's first Kotlin Multiplatform module, which powers the CGM graph.",
-        "Designed the app's offline-first architecture with local Room/SQLite persistence.",
-        "Delivered continuous health monitoring by designing a high-concurrency client data processing pipeline with low-latency background updates.",
-        "Reduced app memory footprint by 35% and eliminated UI stutter by isolating background telemetry processing into dedicated memory-optimized domain layers."
+        "Delivered real-time health monitoring for individuals with diabetes by architecting the VIEW app with high-concurrency data processing and low-latency communication.",
+        "Reduced memory footprint and improved app responsiveness by implementing memory-optimized domain layers and modular architecture.",
+        "Streamlined the development of shared platform services, increasing code reuse between Android and iOS using Kotlin and Java."
       ],
       "skills": [
-        "High Concurrency",
-        "Memory Optimization",
-        "Kotlin",
+        "Android",
+        "iOS",
         "Kotlin Multiplatform",
-        "Room / SQLite",
-        "Android SDK"
+        "Kotlin",
+        "Java"
       ]
     },
     {
       "name": "arkusnexus",
-      "position": "Mobile Developer",
+      "position": "Senior Mobile Developer",
       "location_type": "On site",
       "location": "Tijuana, Baja California, Mexico",
       "startDate": "2019-04",
       "endDate": "2019-11",
-      "summary": "Built mobile features for Rosy, a memory assistant running on custom embedded hardware, and Simplicity, an insurtech telematics app.",
+      "summary": "Contributed to Rosy (Memory Assistant) and Simplicity (Insurtech) cross-platform applications.",
       "url": "",
       "highlights": [
-        "Built the text-to-speech system for the Rosy memory assistant as a native Android module inside a React Native app running on custom embedded hardware.",
-        "Engineered real-time vehicle telematics and sensor tracking over Bluetooth for Simplicity's dynamic insurtech pricing models."
+        "Executed a 100% successful migration strategy from React Native to native platforms for the Rosy memory assistant, ensuring zero feature regression.",
+        "Increased user acquisition by developing a cross-platform insurtech application with real-time vehicle telematics for dynamic insurance pricing."
       ],
       "skills": [
-        "Android SDK",
-        "React Native Native Modules",
-        "Embedded Hardware",
-        "Bluetooth",
-        "Telematics"
+        "Java",
+        "Android",
+        "React Native",
+        "Cross-platform"
       ]
     },
     {
@@ -226,18 +158,17 @@
       "location": "Tijuana, Baja California, Mexico",
       "startDate": "2014-07",
       "endDate": "2017-07",
-      "summary": "Rebuilt legacy Visual FoxPro business systems as native Android apps, written from scratch in Java.",
+      "summary": "Spearheaded the digital transformation of enterprise operations by architecting a suite of applications, replacing outdated manual processes and significantly boosting efficiency.",
       "url": "",
       "highlights": [
-        "Built multiple Android apps from scratch in Java to replace Visual FoxPro systems: salvage-vehicle buying and selling, shipping, and materials check-in and check-out.",
-        "Built Auto Parts, an auto parts sales platform for Android.",
         "Boosted development velocity for internal projects by creating reusable SDKs and service clients to standardize data access."
       ],
       "skills": [
         "Android",
         "Java",
-        "SDK Design",
-        "Legacy System Replacement"
+        "PHP",
+        "MySQL",
+        "XML"
       ]
     }
   ],
@@ -281,16 +212,16 @@
     {
       "name": "Academia Desde0",
       "badge": "Tech Education",
-      "description": "Educational platform democratizing mobile engineering and Kotlin Multiplatform through in-person and live online courses for non-programmers and experienced professionals.",
+      "description": "Educational platform democratizing mobile engineering and Kotlin Multiplatform for over 2,000 Spanish-speaking developers.",
       "url": "https://desde0.jesusdmedinac.com"
     }
   ],
   "keyBadges": [
-    "Senior Mobile",
+    "Staff / Senior Mobile",
     "Kotlin Multiplatform (KMP)",
     "Jetpack Compose / SwiftUI",
     "Server-Driven UI (SDUI)",
-    "11 Años de Experiencia",
+    "10 Años de Experiencia",
     "San Leandro, CA (Bay Area)",
     "US Work Authorized"
   ]

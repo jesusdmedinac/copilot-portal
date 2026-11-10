@@ -1,7 +1,7 @@
 // Canonical facts synced from cv-ats and JobSearch (see scripts/sync-sources.mjs).
 // Everything the copilot says about CVs, contact data and verified facts comes from here.
-import sources from './sources.generated.json';
-import pkg from '../../package.json';
+import sources from './sources.generated.json' with { type: 'json' };
+import pkg from '../../package.json' with { type: 'json' };
 
 export const APP_VERSION: string = pkg.version;
 
