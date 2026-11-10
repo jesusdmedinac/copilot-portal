@@ -25,8 +25,8 @@
       "number": 1,
       "title": "Android Platform & Core Architecture",
       "pdf": "JesusDMedinaC_Android_CV.pdf",
-      "label": "Staff / Senior Android Platform Engineer | Client Architecture & SDK Internals",
-      "scope": "Senior/Staff Android Platform, SDK internals, UI architecture, client infrastructure.",
+      "label": "Senior Android Platform Engineer | Client Architecture & SDK Internals",
+      "scope": "Senior Android Platform, SDK internals, UI architecture, client infrastructure.",
       "urlMx": "https://cv-ats-eyd.pages.dev/cv-android-platform/",
       "urlUs": "https://cv-ats-eyd.pages.dev/cv-android-platform-us/"
     },
@@ -73,54 +73,69 @@
     },
     {
       "name": "Academia Desde0",
-      "position": "Senior Mobile Developer & Instructor",
+      "position": "Founder & Lead Instructor",
       "startDate": "2024-02",
       "endDate": "2024-12",
       "summary": "Founded an engineering training initiative and open-source incubator to democratize modern mobile architecture, custom view lifecycles, and TDD.",
       "highlights": [
         "Upskilled 20+ developers in modern mobile architecture by designing and delivering a curriculum focused on Android SDK, Jetpack Compose, and Clean Architecture.",
-        "Decreased defect density by 30% across software projects through the strict implementation of Test-Driven Development (TDD) and automated test harnesses.",
         "Established collaborative engineering culture by instituting structured pair programming and agile code review cycles.",
         "Upskilled 20+ developers in modern multiplatform architecture by designing and delivering a production-grade curriculum focused on KMP, Compose Multiplatform, and Clean Architecture.",
         "Engineered open-source reference implementations demonstrating offline-first state synchronization, reactive caching, and cross-platform native UI binding.",
         "Architected, built, and launched zero-to-one mobile companion apps and interactive learning modules using React Native (TypeScript), SwiftUI, and Kotlin.",
-        "Decreased defect density by 30% through disciplined Test-Driven Development (TDD), automated UI testing, and structured concurrency patterns.",
         "Fostered engineering craft through deep architectural teardowns, pair programming, and production deployment simulations across iOS and Android."
       ]
     },
     {
       "name": "Beek.io",
-      "position": "Mobile Software Engineer (Audio Streaming & Platform)",
+      "position": "Mobile Software Engineer",
       "startDate": "2022-12",
       "endDate": "2023-09",
-      "summary": "Series A audio content startup backed by Greylock & Accel (5M+ downloads); entire original audio content catalog acquired by Spotify.",
+      "summary": "",
       "highlights": [
+        "Spearheaded Android codebase modernization, migrating legacy monolithic architectures into modular Kotlin packages and reducing technical debt by 31%.",
+        "Architected multiplatform shared libraries using Kotlin Multiplatform, eliminating code duplication between Android and iOS for network layer, models, and analytics.",
         "Architected core background audio playback services, offline-first synchronization, and seamless lock-screen playback controllers for continuous listening.",
         "Engineered smooth in-app purchasing (IAP) funnels and audio catalog discovery, increasing subscription conversion and playback session length.",
         "Maintained 99.9% crash-free sessions across high-frequency audio streaming and dynamic catalog search."
       ]
     },
     {
-      "name": "Bubble",
-      "position": "Senior Android Software Consultant (Fintech & Mobile Platforms)",
-      "startDate": "2021-03",
-      "endDate": "2024-02",
-      "summary": "Provided hands-on engineering, codebase modularization, and strategic platform guidance for high-scale organizations in Fintech and MedTech.",
+      "name": "Bitso",
+      "position": "Android Engineer",
+      "startDate": "2021-12",
+      "endDate": "2022-05",
+      "summary": "",
       "highlights": [
-        "Bitso (Fintech): Owned the cross-platform integration of user engagement SDKs using Kotlin Multiplatform across Android and iOS.",
-        "Dexcom (Medical): Championed robust testing practices and SDK development for high-trust health apps, maintaining 99.94% crash-free sessions.",
-        "Spearheaded Android codebase modernization, migrating legacy monolithic architectures into modular Kotlin packages and reducing technical debt by 31%.",
-        "Maintained 99.9% crash-free sessions across millions of app sessions by establishing robust error-handling boundaries and automated regression suites.",
+        "Owned the cross-platform integration of user engagement SDKs using Kotlin Multiplatform across Android and iOS.",
         "Created custom Gradle plugins to standardize build configurations and automated testing suites across engineering squads.",
-        "Architected multiplatform shared libraries using Kotlin Multiplatform, eliminating code duplication between Android and iOS for network layer, models, and analytics.",
-        "Created custom Gradle plugins to standardize build configurations, version catalogs, and multiplatform target compilation across engineering squads.",
-        "Spearheaded mobile codebase modernization, migrating legacy monolithic architectures into modular Kotlin and cross-platform packages.",
-        "Created custom build automation and CI/CD pipelines accelerating release cycles across multidisciplinary teams."
+        "Created custom Gradle plugins to standardize build configurations, version catalogs, and multiplatform target compilation across engineering squads."
+      ]
+    },
+    {
+      "name": "Vlokr (early-stage startup)",
+      "position": "Founding Engineer",
+      "startDate": "2021-06",
+      "endDate": "2021-12",
+      "summary": "",
+      "highlights": [
+        "Chose the full technology stack and planned, designed and built the mobile app as the first engineering hire, working directly with the CTO.",
+        "Built the serverless AWS backend with S3 video uploads, delivering a working MVP with videos, thumbnails, comments and likes."
+      ]
+    },
+    {
+      "name": "Dexcom",
+      "position": "Senior Software Engineer, Mobile",
+      "startDate": "2021-03",
+      "endDate": "2021-06",
+      "summary": "",
+      "highlights": [
+        "Championed robust testing practices and SDK development for high-trust health apps."
       ]
     },
     {
       "name": "Insulet Corporation",
-      "position": "Senior Mobile Engineer",
+      "position": "Mobile Engineer",
       "startDate": "2019-11",
       "endDate": "2021-03",
       "summary": "Architected the VIEW mobile platform empowering caregivers with continuous, real-time diabetes telemetry under strict medical device regulatory compliance.",
@@ -132,14 +147,13 @@
     },
     {
       "name": "arkusnexus",
-      "position": "Senior Mobile Developer",
+      "position": "Mobile Developer",
       "startDate": "2019-04",
       "endDate": "2019-11",
       "summary": "Led mobile platform engineering and framework migrations for memory assistant and insurtech telematics applications.",
       "highlights": [
-        "Executed a 100% successful zero-regression migration from React Native to native Android for the Rosy memory assistant app, improving launch times by 40%.",
-        "Engineered real-time vehicle telematics and sensor tracking systems for dynamic insurtech pricing models.",
-        "Executed a 100% successful zero-regression migration from React Native to native Android for the Rosy memory assistant app on custom embedded hardware, improving launch times by 40%."
+        "Built the text-to-speech system for the Rosy memory assistant as a native Android module inside a React Native app running on custom embedded hardware.",
+        "Engineered real-time vehicle telematics and sensor tracking systems for dynamic insurtech pricing models."
       ]
     },
     {
