@@ -49,7 +49,7 @@ export function analyzeAndGeneratePackage(input: string): ApplicationPackage {
       };
     }
 
-    const customAnswer = `With 10 years of mobile software engineering experience at Wells Fargo and high-trust client environments, my approach emphasizes robust client platform architecture, strict testing practices (TDD), and Kotlin Multiplatform to deliver resilient mobile products at scale.`;
+    const customAnswer = `With 11 years of mobile software engineering experience at Wells Fargo and high-trust client environments, my approach emphasizes robust client platform architecture, strict testing practices (TDD), and Kotlin Multiplatform to deliver resilient mobile products at scale.`;
     
     const notionSnippet = `### 💡 Nueva Pregunta de Formulario:
 * **Pregunta:** "${text}"
@@ -111,7 +111,7 @@ export function analyzeAndGeneratePackage(input: string): ApplicationPackage {
   // CASO 1: Post de LinkedIn con Email de Contacto
   if (isLinkedInPost && emailMatch) {
     const email = emailMatch[1];
-    const subject = `Staff / Senior Mobile Engineer — Jesús Medina (${role})`;
+    const subject = `Senior Mobile Engineer — Jesús Medina (${role})`;
     const draft = `Hi,
 
 Saw your note regarding the ${role} opening at ${company}.
@@ -140,7 +140,7 @@ Jesús Daniel Medina Cruz`;
   if (text.length > 150 || lower.includes('requirements') || lower.includes('responsibilities') || lower.includes('qualifications') || lower.includes('requisitos')) {
     const coverLetter = `Dear Hiring Team at ${company},
 
-The ${role} role matches what I do: 10 years of mobile engineering across modular Android systems, Jetpack Compose UI, and Kotlin Multiplatform (KMP). I am currently Senior UI Engineer at Wells Fargo (Client Platform).
+The ${role} role matches what I do: 11 years of mobile engineering across modular Android systems, Jetpack Compose UI, and Kotlin Multiplatform (KMP). I am currently Senior UI Engineer at Wells Fargo (Client Platform).
 
 At Wells Fargo I architected a centralized, testable navigation system that consolidated 10+ fragmented entry points, and I lead the migration from XML layouts to Jetpack Compose under Clean Architecture and MVVM.
 
@@ -152,12 +152,12 @@ Jesús Daniel Medina Cruz`;
     const atsAnswers = [
       {
         question: `Why ${company}? / What excites you about this role?`,
-        answer: `With 10 years of mobile engineering experience focused on the Android SDK, Kotlin Multiplatform (KMP), and modular client architecture, I am drawn to ${company}'s commitment to engineering excellence at massive scale. Having built open-source engines like json-to-compose and consolidated banking flows at Wells Fargo, I am eager to help ${company} elevate client platform performance and developer velocity.`,
+        answer: `With 11 years of mobile engineering experience focused on the Android SDK, Kotlin Multiplatform (KMP), and modular client architecture, I am drawn to ${company}'s commitment to engineering excellence at massive scale. Having built open-source engines like json-to-compose and consolidated banking flows at Wells Fargo, I am eager to help ${company} elevate client platform performance and developer velocity.`,
         tag: 'Why Us'
       },
       {
         question: 'Do you have iOS or Cross-Platform experience?',
-        answer: 'My cross-platform expertise centers on Kotlin Multiplatform (KMP), enabling 100% shared business logic, networking, and data layers between Android and iOS without runtime overhead. While my native deep-dive is Android SDK and Compose, I routinely collaborate with iOS engineers to expose clean Swift-friendly APIs via SKIE and SPM dependencies.',
+        answer: 'My cross-platform expertise centers on Kotlin Multiplatform (KMP), enabling shared business logic, networking, and data layers between Android and iOS without runtime overhead. While my native deep-dive is Android SDK and Compose, I routinely collaborate with iOS engineers to expose clean Swift-friendly APIs via SKIE and SPM dependencies.',
         tag: 'Cross-Platform'
       },
       {
@@ -214,7 +214,7 @@ Jesús Daniel Medina Cruz`;
   }
 
   // Si es una pregunta nueva no catalogada en guides.json
-  const customAnswer = `With 10 years of mobile software engineering experience at Wells Fargo and consulting environments, my approach emphasizes robust client architecture, strict testing practices (TDD), and Kotlin Multiplatform to deliver resilient mobile products at scale.`;
+  const customAnswer = `With 11 years of mobile software engineering experience at Wells Fargo and in fintech and medtech environments, my approach emphasizes robust client architecture, strict testing practices (TDD), and Kotlin Multiplatform to deliver resilient mobile products at scale.`;
   
   const notionSnippet = `### 💡 Nueva Pregunta de Formulario:
 * **Pregunta:** "${text}"

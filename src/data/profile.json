@@ -6,7 +6,7 @@
     "email": "jesus.daniel.medina.cruz@gmail.com",
     "phone": "+14704061747",
     "url": "https://jesusdmedinac.com",
-    "summary": "Senior Mobile Engineer with 10 years of experience architecting highly scalable cross-platform systems. Specialized in Kotlin Multiplatform (KMP) to maximize code sharing across Android, iOS, desktop, web, and server environments without sacrificing native performance. Proven track record of leading migrations, modernizing legacy systems, and establishing robust CI/CD pipelines to accelerate delivery cycles in fast-paced startup and enterprise environments.",
+    "summary": "Senior Mobile Engineer with 11 years of experience architecting highly scalable cross-platform systems. Specialized in Kotlin Multiplatform (KMP) to maximize code sharing across Android, iOS, desktop, web, and server environments without sacrificing native performance. Proven track record of leading migrations, modernizing legacy systems, and establishing robust CI/CD pipelines to accelerate delivery cycles in fast-paced startup and enterprise environments.",
     "theme": "default",
     "location": {
       "address": "",
@@ -66,7 +66,7 @@
     },
     {
       "name": "Academia Desde0",
-      "position": "Senior Mobile Developer & Instructor",
+      "position": "Founder & Lead Instructor",
       "location_type": "Remote",
       "location": "Remote",
       "startDate": "2024-02",
@@ -75,7 +75,6 @@
       "summary": "Directed curriculum development at a training platform founded to democratize access to high-quality tech education for Spanish-speaking communities.",
       "highlights": [
         "Upskilled developers in modern mobile architecture by designing and delivering a curriculum focused on KMP and modern architectural patterns.",
-        "Decreased bug density in student projects through the implementation of project-based learning and Test-Driven Development (TDD).",
         "Improved code quality and team collaboration by establishing pair programming, structured code reviews, and agile feedback cycles."
       ],
       "skills": [
@@ -86,32 +85,70 @@
       ]
     },
     {
-      "name": "Bubble",
-      "position": "Mobile Software Consultant (KMP Focus)",
       "location_type": "Remote",
       "location": "Remote",
-      "startDate": "2021-03",
-      "endDate": "2024-02",
-      "summary": "Provided hands-on engineering and strategic guidance across multiple companies (Bitso, Dexcom), focusing on scalable and maintainable codebases for Android and iOS.",
-      "url": "https://bubble.jesusdmedinac.com",
+      "url": "https://beek.io",
+      "summary": "Series A audio content startup backed by Greylock & Accel (5M+ downloads); entire original audio content catalog acquired by Spotify.",
+      "skills": [],
+      "name": "Beek.io",
+      "position": "Mobile Software Engineer",
+      "startDate": "2022-12",
+      "endDate": "2023-09",
       "highlights": [
-        "Increased development velocity by leading a codebase modernization initiative, migrating legacy implementations to modular, shared Kotlin packages.",
-        "Bitso (Fintech): Owned cross-platform integration of user engagement SDKs using Kotlin Multiplatform across Android and iOS.",
-        "Dexcom (Medical): Championed robust testing practices and SDK development for high-trust health apps, maintaining 99.94% crash-free sessions.",
-        "Increased user engagement by integrating AI-driven personalization and dynamic user experiences via Firebase Remote Config."
-      ],
-      "skills": [
-        "Android",
-        "iOS",
-        "Kotlin Multiplatform",
-        "Firebase",
-        "CI/CD",
-        "Kotlin"
+        "Spearheaded Android codebase modernization, migrating legacy monolithic architectures into modular Kotlin packages and reducing technical debt by 31%.",
+        "Architected multiplatform shared libraries using Kotlin Multiplatform for the network layer, models and analytics, eliminating code duplication between Android and iOS.",
+        "Architected core background audio playback services, offline-first synchronization and lock-screen playback controllers.",
+        "Engineered in-app purchasing (IAP) funnels and audio catalog discovery, increasing subscription conversion and playback session length.",
+        "Maintained 99.9% crash-free sessions across high-frequency audio streaming and dynamic catalog search."
+      ]
+    },
+    {
+      "location_type": "Remote",
+      "location": "Remote",
+      "url": "",
+      "summary": "",
+      "skills": [],
+      "name": "Bitso",
+      "position": "Android Engineer",
+      "startDate": "2021-12",
+      "endDate": "2022-05",
+      "highlights": [
+        "Owned the cross-platform integration of user engagement SDKs using Kotlin Multiplatform across Android and iOS.",
+        "Created custom Gradle plugins to standardize build configurations and automated testing suites across engineering squads."
+      ]
+    },
+    {
+      "location_type": "Remote",
+      "location": "Remote",
+      "url": "",
+      "summary": "",
+      "skills": [],
+      "name": "Vlokr (early-stage startup)",
+      "position": "Founding Engineer",
+      "startDate": "2021-06",
+      "endDate": "2021-12",
+      "highlights": [
+        "Chose the full technology stack and planned, designed and built the mobile app as the first engineering hire, working directly with the CTO.",
+        "Built the serverless AWS backend with S3 video uploads, delivering a working MVP with videos, thumbnails, comments and likes."
+      ]
+    },
+    {
+      "location_type": "Remote",
+      "location": "Remote",
+      "url": "",
+      "summary": "",
+      "skills": [],
+      "name": "Dexcom",
+      "position": "Senior Software Engineer, Mobile",
+      "startDate": "2021-03",
+      "endDate": "2021-06",
+      "highlights": [
+        "Championed robust testing practices and SDK development for high-trust health apps."
       ]
     },
     {
       "name": "Insulet Corporation",
-      "position": "Senior Mobile Engineer",
+      "position": "Mobile Engineer",
       "location_type": "On site",
       "location": "Tijuana, Baja California, Mexico",
       "startDate": "2019-11",
@@ -133,7 +170,7 @@
     },
     {
       "name": "arkusnexus",
-      "position": "Senior Mobile Developer",
+      "position": "Mobile Developer",
       "location_type": "On site",
       "location": "Tijuana, Baja California, Mexico",
       "startDate": "2019-04",
@@ -141,7 +178,7 @@
       "summary": "Contributed to Rosy (Memory Assistant) and Simplicity (Insurtech) cross-platform applications.",
       "url": "",
       "highlights": [
-        "Executed a 100% successful migration strategy from React Native to native platforms for the Rosy memory assistant, ensuring zero feature regression.",
+        "Built the text-to-speech system for the Rosy memory assistant as a native Android module inside a React Native app running on custom embedded hardware.",
         "Increased user acquisition by developing a cross-platform insurtech application with real-time vehicle telematics for dynamic insurance pricing."
       ],
       "skills": [
@@ -212,16 +249,16 @@
     {
       "name": "Academia Desde0",
       "badge": "Tech Education",
-      "description": "Educational platform democratizing mobile engineering and Kotlin Multiplatform for over 2,000 Spanish-speaking developers.",
+      "description": "Educational platform democratizing mobile engineering and Kotlin Multiplatform through in-person and live online courses for non-programmers and experienced professionals.",
       "url": "https://desde0.jesusdmedinac.com"
     }
   ],
   "keyBadges": [
-    "Staff / Senior Mobile",
+    "Senior Mobile",
     "Kotlin Multiplatform (KMP)",
     "Jetpack Compose / SwiftUI",
     "Server-Driven UI (SDUI)",
-    "10 Años de Experiencia",
+    "11 Años de Experiencia",
     "San Leandro, CA (Bay Area)",
     "US Work Authorized"
   ]

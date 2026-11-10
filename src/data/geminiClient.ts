@@ -12,8 +12,10 @@ export interface ChatMessageContext {
 const COMPANY_DOMAINS: Record<string, string> = {
   'Wells Fargo': 'Banca / fintech, plataforma Android a gran escala',
   'Academia Desde0': 'Edtech, mentoría técnica',
-  'Bubble': 'Consultoría: Bitso (fintech, KMP) y Dexcom (health tech / medtech)',
-  'Beek.io': 'Startup de audiolibros (empleo propio, no vía Bubble)',
+  'Bitso': 'Fintech: integración de SDKs con Kotlin Multiplatform en Android e iOS',
+  'Dexcom': 'Health tech / medtech: testing y SDKs para apps de salud',
+  'Vlokr (early-stage startup)': 'Startup cripto (early-stage): primera contratación de ingeniería',
+  'Beek.io': 'Startup de audiolibros (empleo propio)',
   'Insulet Corporation': 'Health tech / medtech (dispositivos médicos para diabetes)',
   'arkusnexus': 'Startups: asistente de memoria (Rosy), insurtech con telemática vehicular',
   'Compus Sistemas Express': 'Software empresarial interno'

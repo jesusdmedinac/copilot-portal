@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import profile from '../../data/profile.json';
 import CopyButton from '../CopyButton';
 
-const elevatorPitch = "Senior Mobile Engineer with 10 years of experience architecting high-scale client platforms at Wells Fargo and cross-platform systems in Kotlin Multiplatform (KMP). Creator of json-to-compose and Zora Community.";
+const elevatorPitch = "Senior Mobile Engineer with 11 years of experience architecting high-scale client platforms at Wells Fargo and cross-platform systems in Kotlin Multiplatform (KMP). Creator of json-to-compose and Zora Community.";
 
 export default function ProfileView() {
   const [searchQuery, setSearchQuery] = useState('');
