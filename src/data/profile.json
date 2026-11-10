@@ -75,7 +75,8 @@
       "summary": "Directed curriculum development at a training platform founded to democratize access to high-quality tech education for Spanish-speaking communities.",
       "highlights": [
         "Upskilled developers in modern mobile architecture by designing and delivering a curriculum focused on KMP and modern architectural patterns.",
-        "Improved code quality and team collaboration by establishing pair programming, structured code reviews, and agile feedback cycles."
+        "Improved code quality and team collaboration by establishing pair programming, structured code reviews, and agile feedback cycles.",
+        "Runs a catalog of in-person and live online courses for non-programmers and experienced professionals; student-born projects include Bubble, Zora, Gobus, and Maxiser."
       ],
       "skills": [
         "Mobile Development",
@@ -88,17 +89,26 @@
       "location_type": "Remote",
       "location": "Remote",
       "url": "https://beek.io",
-      "summary": "Series A audio content startup backed by Greylock & Accel (5M+ downloads); entire original audio content catalog acquired by Spotify.",
-      "skills": [],
+      "summary": "Series A audio content startup backed by Greylock & Accel (5M+ downloads); entire original audio content catalog acquired by Spotify. Hired to move the React Native app to fully native Android and iOS.",
+      "skills": [
+        "Kotlin Multiplatform",
+        "Jetpack Compose",
+        "SwiftUI",
+        "CircleCI & Fastlane",
+        "Ruby on Rails"
+      ],
       "name": "Beek.io",
       "position": "Mobile Software Engineer",
       "startDate": "2022-12",
       "endDate": "2023-09",
       "highlights": [
+        "Owned the native Android and iOS apps end to end during the migration from React Native to fully native clients.",
+        "Built a complete audio player in Kotlin Multiplatform with native Jetpack Compose and SwiftUI interfaces, covering background playback, offline-first synchronization, and lock-screen controls.",
+        "Architected multiplatform shared libraries using Kotlin Multiplatform, eliminating code duplication between Android and iOS for network layer, models, and analytics.",
         "Spearheaded Android codebase modernization, migrating legacy monolithic architectures into modular Kotlin packages and reducing technical debt by 31%.",
-        "Architected multiplatform shared libraries using Kotlin Multiplatform for the network layer, models and analytics, eliminating code duplication between Android and iOS.",
-        "Architected core background audio playback services, offline-first synchronization and lock-screen playback controllers.",
-        "Engineered in-app purchasing (IAP) funnels and audio catalog discovery, increasing subscription conversion and playback session length.",
+        "Introduced CI/CD from scratch with CircleCI and Fastlane, replacing manual releases with automated debug and release builds and internal testing distribution on Google Play and the App Store.",
+        "Engineered smooth in-app purchasing (IAP) funnels and audio catalog discovery, increasing subscription conversion and playback session length.",
+        "Modified REST and GraphQL endpoints in Ruby on Rails to unblock mobile features.",
         "Maintained 99.9% crash-free sessions across high-frequency audio streaming and dynamic catalog search."
       ]
     },
@@ -107,42 +117,60 @@
       "location": "Remote",
       "url": "",
       "summary": "",
-      "skills": [],
+      "skills": [
+        "Kotlin Multiplatform",
+        "CleverTap SDK",
+        "Android",
+        "Fintech"
+      ],
       "name": "Bitso",
       "position": "Android Engineer",
       "startDate": "2021-12",
       "endDate": "2022-05",
       "highlights": [
-        "Owned the cross-platform integration of user engagement SDKs using Kotlin Multiplatform across Android and iOS.",
-        "Created custom Gradle plugins to standardize build configurations and automated testing suites across engineering squads."
+        "Owned the integration of the CleverTap user engagement SDK through Kotlin Multiplatform, sharing a single implementation across the Android and iOS apps."
       ]
     },
     {
-      "location_type": "Remote",
-      "location": "Remote",
+      "location_type": "On site",
+      "location": "On site",
       "url": "",
-      "summary": "",
-      "skills": [],
+      "summary": "Early-stage startup building a short-video social app with crypto features.",
+      "skills": [
+        "Kotlin",
+        "Android SDK",
+        "AWS Serverless",
+        "Amazon S3",
+        "Zero-to-One MVP"
+      ],
       "name": "Vlokr (early-stage startup)",
       "position": "Founding Engineer",
       "startDate": "2021-06",
       "endDate": "2021-12",
       "highlights": [
-        "Chose the full technology stack and planned, designed and built the mobile app as the first engineering hire, working directly with the CTO.",
-        "Built the serverless AWS backend with S3 video uploads, delivering a working MVP with videos, thumbnails, comments and likes."
+        "Joined as the first engineering hire, working directly with the CTO; selected the full technology stack and planned, designed, and built the Android app in native Kotlin.",
+        "Built the serverless AWS backend, with S3 video uploads and an AWS-managed database.",
+        "Delivered a working MVP with video playback, thumbnails, comments, and likes."
       ]
     },
     {
       "location_type": "Remote",
       "location": "Remote",
       "url": "",
-      "summary": "",
-      "skills": [],
+      "summary": "Mobile SDKs behind Dexcom's continuous glucose monitoring (CGM) apps.",
+      "skills": [
+        "JUnit 4 & 5",
+        "Kotlin",
+        "Java",
+        "SDK Testing",
+        "MedTech"
+      ],
       "name": "Dexcom",
       "position": "Senior Software Engineer, Mobile",
       "startDate": "2021-03",
       "endDate": "2021-06",
       "highlights": [
+        "Wrote unit and integration tests with JUnit 4 and JUnit 5 for the Kotlin and Java SDKs used by the G6 and G7 CGM mobile apps.",
         "Championed robust testing practices and SDK development for high-trust health apps."
       ]
     },
@@ -156,16 +184,18 @@
       "summary": "Spearheaded the development of the VIEW app, an innovative mobile solution empowering caregivers to remotely monitor the health of individuals living with diabetes.",
       "url": "",
       "highlights": [
-        "Delivered real-time health monitoring for individuals with diabetes by architecting the VIEW app with high-concurrency data processing and low-latency communication.",
-        "Reduced memory footprint and improved app responsiveness by implementing memory-optimized domain layers and modular architecture.",
-        "Streamlined the development of shared platform services, increasing code reuse between Android and iOS using Kotlin and Java."
+        "Migrated the VIEW codebase from Java to Kotlin and introduced the app's first Kotlin Multiplatform module, which powers the CGM graph.",
+        "Designed the app's offline-first architecture with local Room/SQLite persistence.",
+        "Delivered continuous health monitoring by designing a high-concurrency client data processing pipeline with low-latency background updates.",
+        "Reduced app memory footprint by 35% and eliminated UI stutter by isolating background telemetry processing into dedicated memory-optimized domain layers."
       ],
       "skills": [
-        "Android",
-        "iOS",
-        "Kotlin Multiplatform",
+        "High Concurrency",
+        "Memory Optimization",
         "Kotlin",
-        "Java"
+        "Kotlin Multiplatform",
+        "Room / SQLite",
+        "Android SDK"
       ]
     },
     {
@@ -175,17 +205,18 @@
       "location": "Tijuana, Baja California, Mexico",
       "startDate": "2019-04",
       "endDate": "2019-11",
-      "summary": "Contributed to Rosy (Memory Assistant) and Simplicity (Insurtech) cross-platform applications.",
+      "summary": "Built mobile features for Rosy, a memory assistant running on custom embedded hardware, and Simplicity, an insurtech telematics app.",
       "url": "",
       "highlights": [
         "Built the text-to-speech system for the Rosy memory assistant as a native Android module inside a React Native app running on custom embedded hardware.",
-        "Increased user acquisition by developing a cross-platform insurtech application with real-time vehicle telematics for dynamic insurance pricing."
+        "Engineered real-time vehicle telematics and sensor tracking over Bluetooth for Simplicity's dynamic insurtech pricing models."
       ],
       "skills": [
-        "Java",
-        "Android",
-        "React Native",
-        "Cross-platform"
+        "Android SDK",
+        "React Native Native Modules",
+        "Embedded Hardware",
+        "Bluetooth",
+        "Telematics"
       ]
     },
     {
@@ -195,17 +226,18 @@
       "location": "Tijuana, Baja California, Mexico",
       "startDate": "2014-07",
       "endDate": "2017-07",
-      "summary": "Spearheaded the digital transformation of enterprise operations by architecting a suite of applications, replacing outdated manual processes and significantly boosting efficiency.",
+      "summary": "Rebuilt legacy Visual FoxPro business systems as native Android apps, written from scratch in Java.",
       "url": "",
       "highlights": [
+        "Built multiple Android apps from scratch in Java to replace Visual FoxPro systems: salvage-vehicle buying and selling, shipping, and materials check-in and check-out.",
+        "Built Auto Parts, an auto parts sales platform for Android.",
         "Boosted development velocity for internal projects by creating reusable SDKs and service clients to standardize data access."
       ],
       "skills": [
         "Android",
         "Java",
-        "PHP",
-        "MySQL",
-        "XML"
+        "SDK Design",
+        "Legacy System Replacement"
       ]
     }
   ],
